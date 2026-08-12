@@ -1,0 +1,18 @@
+# 依赖与构建产物
+node_modules/
+public/
+db.json
+.deploy_git/
+.deploy_git*/
+
+# 迁移过程产生的临时文件
+.notion_tmp.json
+.notion_manifest.json
+.migration_report.json
+
+# 系统/编辑器
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+*.log

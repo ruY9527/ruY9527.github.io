@@ -1,0 +1,111 @@
+---
+title: "JVM的JIT优化"
+date: 2021-12-28 12:00:00
+updated: 2025-12-31 13:04:30
+permalink: article/jvm_jit/
+categories:
+  - "JVM"
+tags:
+  - "JVM"
+  - "思考"
+description: "JVM中JIT优化"
+cover: /images/posts/jvm_jit/img-1.png
+---
+
+> 😀 这里写文章的前言：
+> JVM（Java虚拟机）中的JIT（即时编译器）是一种优化技术，它将字节码实时编译成本地机器码，以提高Java应用程序的执行性能
+
+# 📝 逃逸分析
+
+**逃逸分析并不是直接的优化手段**，而是一个代码分析，通过动态分析对象的作用域，为其它优化手段如栈上分配、标量替换和同步消除等提供依据，发生逃逸行为的情况有两种：方法逃逸和线程逃逸
+
+1.  **方法逃逸**：当一个对象在方法中定义之后，作为参数传递到其它方法中；
+2.  **线程逃逸**：如类变量或实例变量，可能被其它线程访问到；
+
+<details><summary>如果**不存在**逃逸行为，则可以对该对象进行如下优化：</summary>
+
+</details>
+
+![JVM的JIT优化](/images/posts/jvm_jit/img-1.png)
+
+# **📔标量替换**
+
+1. 标量是指不可分割的量，如java中基本数据类型和reference类型，相对的一个数据可以继续分解，称为聚合量；
+2. 如果把一个对象拆散，将其成员变量恢复到基本类型来访问就叫做标量替换；
+3. 如果逃逸分析发现一个对象不会被外部访问，并且该对象可以被拆散，那么经过优化之后，并不直接生成该对象，而是在栈上创建若干个成员变量；
+4. 通过`-XX:+EliminateAllocations`可以开启标量替换， 
+5. `-XX:+PrintEliminateAllocations`查看标量替换情况;
+
+本来是对象.name, 对象.age, 直接转化成 String name , int age, 标量替换,不需要去new对象了
+
+![JVM的JIT优化](/images/posts/jvm_jit/img-2.png)
+
+# **📔栈上分配**
+
+在栈上分配对象，其实目前Hotspot并没有实现真正意义上的栈上分配，实际上是标量替换
+
+![JVM的JIT优化](/images/posts/jvm_jit/img-3.png)
+
+User对象的作用域局限在方法fn中，可以使用标量替换的优化手段在栈上分配对象的成员变量，这样就不会生成User对象，大大减轻GC的压力
+
+分层编译和逃逸分析在1.8中是默认是开启的，例子中fn方法被执行了200w次，按理说应该在Java堆生成200w个User对象,实际堆中产生的对象没有200W个, 但是还是会产生一部分数据,栈上分配不能绝对100%分配
+
+![JVM的JIT优化](/images/posts/jvm_jit/img-4.png)
+
+# **📔同步消除**
+
+线程同步本身比较消费性能(要抢锁,释放锁,期间还可能发生上下文切换问题)，如果确定一个对象不会逃逸出线程，无法被其它线程访问到，那该对象的读写就不会存在竞争，则可以消除对该对象的同步锁，通过`-XX:+EliminateLocks`可以开启同步消除(也就是锁消除,清除了管程,不需要管程来控制并发问题)
+
+# **📔内联优化（方法内联）**
+
+内联就是把目标方法的代码复制到调用方法之中, **就不用新生成一个栈帧做多余的损耗了**
+
+将热点方法的代码直接插入到调用处，避免了方法调用的开销，提供了执行速度
+
+`addNumbers` 方法调用了 `multiplyNumbers` 方法，而 `multiplyNumbers` 方法只是简单地执行了乘法运算。当 JIT 编译器优化代码时，它可以选择将 `multiplyNumbers` 方法内联到 `addNumbers` 方法中。这样，调用 `addNumbers` 方法的地方就直接执行了乘法运算，而不再需要额外的方法调用开销
+
+```java
+public class MethodInliningExample {
+
+    public static void main(String[] args) {
+        int result = addNumbers(5, 10);
+        System.out.println("Result: " + result);
+    }
+
+    private static int addNumbers(int a, int b) {
+        return multiplyNumbers(a, b);
+    }
+
+    private static int multiplyNumbers(int x, int y) {
+        return x * y;
+    }
+}
+```
+
+# **📔循环优化**
+
+JIT会对循环进行优化，如循环展开（Loop Unrolling）、循环变量消除（Loop Variable Elimination）和循环不变代码外提（Loop-Invariant Code Motion），以减少循环的开销和提高执行效率
+
+# **📔内联缓存**
+
+<details><summary>动态调用和静态调用的区别</summary>
+
+</details>
+
+内联缓存通过缓存动态调用的方法地址，将动态调用转换为静态调用，从而避免了重复的查找和分派操作，提高了方法的执行效率
+
+具体展开内联缓存的流程如下：
+
+1. 初始阶段：在第一次动态调用时，JVM会记录下方法的接收者类型和对应的方法地址，将其存储在内联缓存中。
+1. 缓存命中：在后续的动态调用中，如果接收者类型与之前缓存的类型匹配，那么就可以直接从内联缓存中获取对应的方法地址，进行静态调用。
+1. 缓存未命中：如果接收者类型与内联缓存中存储的类型不匹配，就需要进行查找和分派操作，以确定方法的地址。在此过程中，JVM会更新内联缓存，将新的接收者类型和方法地址存储在缓存中，以便下次调用时使用。
+
+<details><summary>如果动态调用的类型多样性较高或者存在频繁的类型变化，内联缓存的效果可能会降低。</summary>
+
+</details>
+
+# 🤗 总结归纳
+
+# 📎 参考文章
+
+> 💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~

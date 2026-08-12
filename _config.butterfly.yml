@@ -1,0 +1,220 @@
+# Butterfly 主题配置 (_config.butterfly.yml 覆盖主题默认配置)
+# Docs: https://butterfly.js.org/posts/4aa8abbe/
+
+# 导航栏
+nav:
+  logo: # 可填图片地址
+  display_title: true
+  fixed: true
+
+# 菜单
+menu:
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-box-archive
+  分类: /categories/ || fas fa-folder-open
+  标签: /tags/ || fas fa-tags
+  友情链接: /links/ || fas fa-link
+  关于我: /about/ || fas fa-circle-info
+
+# 代码高亮主题
+highlight_theme: mac # darker / pale night / light / ocean / mac / mac light / false
+highlight_copy: true
+highlight_lang: true
+highlight_shrink: false
+highlight_height_limit: false
+code_word_wrap: false
+
+# 社交链接
+social:
+  fab fa-github: https://github.com/ruY9527 || "var(--btn-color)"
+
+favicon: /img/favicon.png
+
+# 头像(侧边栏)
+avatar:
+  img: https://avatars.githubusercontent.com/ruY9527
+  effect: true
+
+# 首页顶部大图(使用主题默认图)
+index_top_img_height:
+disable_top_img: false
+default_top_img:
+default_cover:
+
+# 文章页
+post_meta:
+  page:
+    date_type: both
+    date_fmt: date
+    categories: true
+    tags: true
+    label: true
+  post:
+    date_type: both
+    date_fmt: date
+    categories: true
+    tags: true
+    label: true
+    comments: false
+
+# 文章版权信息
+post_copyright:
+  enable: true
+  decode: false
+  author_href:
+  license: CC BY-NC-SA 4.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans
+
+# 404 页面(GitHub Pages 会自动使用根目录 404.html)
+error_404:
+  enable: true
+  subtitle: 'Page Not Found'
+  background:
+
+# 页脚
+footer:
+  owner:
+    enable: true
+    since: 2020
+  custom_text:
+  copyright: true
+
+# 侧边栏
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true
+  position: right
+  display:
+    archive: true
+    tag: true
+    category: true
+  card_author:
+    enable: true
+    description:  Java / 大数据 / 中间件
+    button:
+      enable: true
+      icon: fab fa-github
+      text: Follow Me
+      link: https://github.com/ruY9527
+  card_announcement:
+    enable: true
+    content: 博客已从 NotionNext 迁移至 GitHub Pages 🎉
+  card_recent_post:
+    enable: true
+    limit: 5
+    sort: date
+    sort_order:
+  card_categories:
+    enable: true
+    limit: 8
+    expand: none
+    sort_order:
+  card_tags:
+    enable: true
+    limit: 40
+    color: false
+    orderby: random
+    order: 1
+    sort_order:
+  card_archives:
+    enable: true
+    type: monthly
+    format: MMMM YYYY
+    order: -1
+    limit: 8
+    sort_order:
+  card_webinfo:
+    enable: true
+    post_count: true
+    last_push_date: true
+    sort_order:
+
+# 网站运行时长(card_webinfo 依赖此项)
+runtimeshow:
+  enable: true
+  publish_date: 2020/06/30 00:00:00
+  card_post_series:
+    enable: true
+    series_title:
+    orderBy: 'date'
+    order: -1
+
+# 深色模式切换按钮
+darkmode:
+  enable: true
+  # Toggle Button to switch dark/light mode
+  button: true
+  autoChangeMode: false
+
+# 数学公式
+mathjax:
+  enable: true
+  per_page: false
+
+katex:
+  enable: false
+  per_page: false
+  hide_scrollbar: true
+
+# 本地搜索
+local_search:
+  enable: true
+  preload: false
+  top_n_per_article: 1
+  unescape: false
+  CDN:
+
+# Mermaid 流程图
+mermaid:
+  enable: true
+  theme:
+    light: default
+    dark: dark
+
+# Pjax 无刷新加载
+pjax:
+  enable: true
+  exclude:
+
+# 图片懒加载
+lazyload:
+  enable: true
+  field: site
+  placeholder:
+  blur: false
+
+# 字数统计/阅读时长(主题内置,无需插件)
+wordcount:
+  enable: true
+  post_wordcount: true
+  min2read: true
+  total_wordcount: true
+
+# 翻译按钮
+translate:
+  enable: false
+
+# 评论(默认关闭;如需启用,推荐 giscus,把 repo 信息填上即可)
+comments:
+  use:
+  text: true
+  lazyload: false
+  count: false
+  card_post_count: false
+
+giscus:
+  repo:
+  repo_id:
+  category_id:
+  theme:
+    light: light
+    dark: dark
+  option:
+
+# 分享
+sharejs:
+  enable: false
+addtoany:
+  enable: false

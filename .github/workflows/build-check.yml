@@ -1,0 +1,33 @@
+name: Build Check
+
+# dev 分支推送 / 向 main 提 PR 时,只做构建验证,不部署
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npx hexo clean && npx hexo generate
+
+      - name: Upload build artifact (preview)
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: public
+          retention-days: 3
