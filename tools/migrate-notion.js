@@ -63,8 +63,8 @@ const EOI_MAP = {
   'f9ee03c7-21b3-45e9-a1be-1e6370244d18': ['JSqlParser', 'https://github.com/JSQLParser/JSqlParser'],
   '001a2570-aee7-4da8-af1b-08fa6d9494ab': ['grammars-v4', 'https://github.com/antlr/grammars-v4'],
   '88eb3949-bb1d-4b7e-9a5b-b9adbc920678': ['datahub-project/datahub', 'https://github.com/datahub-project/datahub'],
-  // '5b8072a3-59c1-4953-9312-106f95678cee': kafka_problems2 处理方案的参考文章,URL 待作者补充
-  // '5396b1f6-be07-4292-bafc-7ad6165acbd1': altrl4one 参考文章列表中的一篇,URL 待作者补充
+  '5b8072a3-59c1-4953-9312-106f95678cee': ['spring-kafka#1180', 'https://github.com/spring-projects/spring-kafka/issues/1180'],
+  '5396b1f6-be07-4292-bafc-7ad6165acbd1': ['grammars-v4', 'https://github.com/antlr/grammars-v4'],
 };
 function escMd(t) {
   return t.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\*/g, '\\*').replace(/\[/g, '\\[').replace(/\]/g, '\\]');

@@ -481,6 +481,6 @@ public static void main(String[] args) {
 # 📎 参考文章
 
 - [https://makeyourchoice.cn/archives/591/](https://makeyourchoice.cn/archives/591/)
-- ⚠️[此处原为Notion外部链接预览(一篇参考文章),迁移时URL无法恢复,待补充]
+- [https://github.com/antlr/grammars-v4](https://github.com/antlr/grammars-v4)
 
 > 💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~
