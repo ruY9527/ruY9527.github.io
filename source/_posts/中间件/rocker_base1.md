@@ -36,9 +36,13 @@ cover: /images/posts/rocker_base1/img-1.png
 
 <details><summary>存储顺序性</summary>
 
+队列天然具备顺序性，即消息按照进入队列的顺序写入存储，同一队列的消息天然存在顺序关系，队列头部为最早写入的消息，队列尾部为最新写入的消息;消息在队列中的位置和消息之间的顺序通过位点(Offset)进行标记管理（顺序消费可以通过定义hashkey指定某个队列，消费者再顺序设置成顺序消费）。
+
 </details>
 
 <details><summary>流式操作语义</summary>
+
+RocketMQ基于队列的存储模型可确保消息从任意位点读取任意数量的消息，以实现类似聚合读取，回溯读取等特性;这些特性是RabbitMQ，ActiveMQ等不具备的
 
 </details>
 

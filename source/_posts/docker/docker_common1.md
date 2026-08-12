@@ -137,9 +137,18 @@ cgroups : control groups 是 Linux内核的一个功能,它可以实现限制进
 
 <details><summary>cgroups主要功能</summary>
 
+- 资源隔离： 限制资源的使用量;例如我们可以通过限制某个业务的内存上限，从而保护主机其它业务安全运行
+- 优先级控制：不同的组可以有不同的资源(如CPU,磁盘IO等)
+- 审计：计算控制组的资源使用情况
+- 控制：控制进程的挂起和恢复
+
 </details>
 
 <details><summary>cgroup主要概念</summary>
+
+- 子系统(subsystem):是一个内核的组件,一个子系统代表一类资源调度器。例如内存子系统可以限制内存的使用量,CPU子系统可以限制CPU的使用时间
+- 控制组(cgroup): 表示一组进程和一组带参数的子系统的关联关系。
+- 层级树(hierarchy): 是由一系列的控制组按照树结构排列组成的。这种排列方式可以使得控制组拥有父子关系，子控制组默认拥有父控制组的属性，也就是子控制组会继承于父控制组。比如，系统中定义了一个控制组 c1，限制了 CPU 可以使用 1 核，然后另外一个控制组 c2 想实现既限制 CPU 使用 1 核，同时限制内存使用 2G，那么 c2 就可以直接继承 c1，无须重复定义 CPU 限制。
 
 </details>
 
@@ -190,6 +199,10 @@ drwx-----x 10 root root  4096 6月   5 05:29 volumes
 
 <details><summary>docker相关组件</summary>
 
+1. docker , dockerd, docker-init 和 docker-proxy
+1. containerd相关组件: containerd, containerd-shim 和 ctr
+1. runc
+
 </details>
 
 ## docker
@@ -203,6 +216,10 @@ Docker 客户端与服务端的交互过程是：docker 组件向服务端发送
 dockerd是docker服务端的后台进程常驻进程，用来接受客户端发送的请求，执行具体的处理任务，处理完后将结果返回给客户端
 
 <details><summary>Docker 客户端可以通过多种方式向 dockerd 发送请求，我们常用的 Docker 客户端与 dockerd 的交互方式有三种- </summary>
+
+- 通过 UNIX 套接字与服务端通信：配置格式为unix://socket_path，默认 dockerd 生成的 socket 文件路径为 /var/run/docker.sock，该文件只有 root 用户或者 docker 用户组的用户才可以访问，这就是为什么 Docker 刚安装完成后只有 root 用户才能使用 docker 命令的原因
+- 通过 TCP 与服务端通信：配置格式为tcp://host:port，通过这种方式可以实现客户端远程连接服务端，但是在方便的同时也带有安全隐患，因此在生产环境中如果你要使用 TCP 的方式与 Docker 服务端通信，推荐使用 TLS 认证，可以通过设置 Docker 的 TLS 相关参数，来保证数据传输的安全
+- 通过文件描述符的方式与服务端通信：配置格式为：fd://这种格式一般用于 systemd 管理的系统中
 
 </details>
 

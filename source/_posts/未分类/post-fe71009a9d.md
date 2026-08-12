@@ -16,13 +16,28 @@ Flink分布式处理引擎，用于有界和无界数据流进行有状态计算
 
 <details><summary>Flink特点</summary>
 
+- 高吞吐和低延迟;每秒处理数百万个事件，毫秒级延迟
+- 结果准确性：Flink提供了事件时间和处理时间语义。用于乱序事件流，事件时间语义仍然能提供一致且准确的结果
+- 精确一次（exactly-once）的状态一致性保证
+- 可以连续到最常用的外部系统，比如Kafka，Hive，JDBC，HDFS，Redis等
+- 高可用：本身高可用的设置，加上k8s，yarn和mesos的紧密集成
+
 </details>
 
 <details><summary>无界数据流：</summary>
 
+- 有定义流的开始，但没有定义流的结束
+- 无休止的产生数据
+- 无界流的数据必须持续处理，即数据被摄取后需要立刻处理;我们不能等到所有数据到达后再处理，数据是无限的
+
 </details>
 
 <details><summary>有界数据流：</summary>
+
+- 有定义流的开始，也有定义流的结束
+- 有界流可以摄取所有的数据后再进行计算
+- 有界流所有的数据可以被排序，所以不需要有序摄取
+- 有界流处理通常被成为批处理
 
 </details>
 
@@ -85,6 +100,16 @@ Yarn的会话模式与独立集群有不同，需要首先申请一个Yarn会话
 
 <details><summary>参数解读</summary>
 
+-d: 分离模式，如果你不想让Flink Yarn客户端一直前台运行，可以使用这个参数，即使关闭掉了当前会话，Yarn Session也可以后台运行
+
+-jm(JobManagerMemory):配置JobManager所需内存，默认单位是MB
+
+-nm(—name):配置在Yarn UI界面上显示的名字
+
+-qu(—queue):指定Yarn队列名
+
+-tm(—taskManager):配置每个TaskManager所使用的内存
+
 </details>
 
 ```java
@@ -104,6 +129,13 @@ bin/flink run -d -t yarn-per-job -c com.atguigu.wc.SocketStreamWordCount FlinkTu
 ```
 
 <details><summary>如果有错误</summary>
+
+在flink的/opt/module/flink-1.17.0/conf/flink-conf.yaml配置文件中设置 classloader.check-leaked-classloader: false
+
+```java
+Exception in thread “Thread-5” java.lang.IllegalStateException: Trying to access closed classloader. Please check if you store classloaders directly or indirectly in static fields. If the stacktrace suggests that the leak occurs in a third party library and cannot be fixed immediately, you can disable this check with the configuration ‘classloader.check-leaked-classloader’.
+at org.apache.flink.runtime.execution.librarycache.FlinkUserCodeClassLoaders
+```
 
 </details>
 
@@ -146,6 +178,29 @@ bin/flink cancel -t yarn-application -Dyarn.application.id=application_XXXX_YY <
 ```
 
 <details><summary>上传jar包等环境到hdfs</summary>
+
+可以通过yarn.provided.lib.dirs配置选项指定位置，将flink的依赖上传到远程
+
+1:上传flink的lib和plugins到HDFS上
+
+```java
+hadoop fs -mkdir /flink-dist
+hadoop fs -put lib/ /flink-dist
+hadoop fs -put plugins/ /flink-dist
+```
+
+2：上传自己jar到HDFS
+
+```java
+hadoop fs -mkdir /flink-jars
+hadoop fs -put FlinkTutorial-1.0-SNAPSHOT.jar /flink-jars
+```
+
+3：提交作业
+
+```java
+bin/flink run-application -t yarn-application	-Dyarn.provided.lib.dirs="hdfs://hadoop102:8020/flink-dist"	-c com.atguigu.wc.SocketStreamWordCount  hdfs://hadoop102:8020/flink-jars/FlinkTutorial-1.0-SNAPSHOT.jar
+```
 
 </details>
 
@@ -249,9 +304,13 @@ TaskManager是Flink中的工作进程，数据流的具体计算就是它来做�
 
 <details><summary>一对一模式</summary>
 
+数据维护着分区以及元素的顺序。比如source和map算子，source算子读取数据之后，可以直接发送给map算子处理，它们之间不需要重分区，也不需要调整数据的顺序。这就意味着map算子的子任务，看到元素的个数和顺序跟source算子的子任务产生的完全一样，保持这一对一的关系。map，filter，flatMap等算子
+
 </details>
 
 <details><summary>重分区</summary>
+
+数据的分区发生改变，比如map和后面的keyBy和window算子之间，以及keyBy/window算子和Sink算子之间，都是这样。每一个算子的子任务，会根据数据传输策略，把数据发送到不同的下游任务目标任务。这些传输方式都会引起重分区的过程;类似spark的shuffle
 
 </details>
 
@@ -281,9 +340,17 @@ TaskManager的计算资源是有限的，并行的任务越多，每个线程的
 
 <details><summary>任务槽配置</summary>
 
+在 flink-conf.yaml 中进行配置：taskmanager.numberOfTaskSlots: 8 ；默认是一个
+
+目前slot仅仅用来隔离内存的，不会涉及CPU隔离;在具体应用中，可以将slot数量配置为机器的CPU核心数，尽量避免不同任务之间对CPU的竞争。
+
 </details>
 
 <details><summary>任务槽和并行度</summary>
+
+任务槽和并行度都和程序的执行有关，但是两者完全不同的概念。
+
+任务槽是静态的概念，是指TaskManager具有的并发执行能力，可以通过参数 taskmanager.numberOfTaskSlots 来进行配置;而
 
 </details>
 

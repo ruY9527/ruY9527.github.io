@@ -49,9 +49,17 @@ Reduce阶段对Map结果进行汇总
 
 <details><summary>优点</summary>
 
+- 高容错性: 数据保存为多个副本分布于多个datanode;如果误删,是可以协助其它nodedata帮忙协助的
+- 处理大量数据: 数据规模大,pb级别;数据文件量多,百万规模以上
+- 在廉价机器服务器上,通过副本机制,提高可用性
+
 </details>
 
 <details><summary>缺点</summary>
+
+- 不适合低延迟的数据
+- 无法高效对大量小文件进行存储;默认分块是按文件切分的,文件太大也会占用一块
+- 不支持并发写入和随机修改: 一个文件只许有一个写,不支持多线程同时写;仅仅支持append追加,不支持随机修改
 
 </details>
 
@@ -69,9 +77,17 @@ DataNode启动后向NameNode注册,通过后,周期性(6小时)向NameNode上报
 
 <details><summary>数据完整性</summary>
 
+- 当DataNode读取Block的时候,它会计算checkSum
+- 如果计算后checkSum,与Block创建的值不一样,说明Block已经损坏
+- Client读取其它的DataNode上的Block
+- DataNode在其文件创建后周期验证checkSum
+
 </details>
 
 <details><summary>**块大小或者块太多问题**</summary>
+
+- 块大小设置的大小,块的数量相对会更多,而块存储起始位置需要寻址时间,块多寻址时间就更长
+- 快太大,磁盘的传输时间明显大于寻址的时间,因为处理块数据时,会需要很多时间,比较慢
 
 </details>
 
@@ -113,25 +129,50 @@ Yarn是一个资源调度平台,负责为程序提供服务器运行资源;相�
 
 <details><summary>作业提交</summary>
 
+1. Client端调用job.waitForCompletion方法,向整个集群提交MapReduce作业
+1. Client向RM申请一个作业id
+1. RM给client返回改job资源的提交路径和作业id
+1. Client提交jar包,切片信息和配置文件到资源的资源提交路径
+1. Client提交完资源后,向RM申请运行MrAppMaster
+
 </details>
 
 <details><summary>作业初始化</summary>
+
+1. 当RM收到Client请求后,将该job添加到容量调度器中
+1. 某一个空闲的NN领取到该Job
+1. 该NN创建Container并产生MRAppMaster
+1. 下载Client提交的资源到本地
 
 </details>
 
 <details><summary>任务分配</summary>
 
+1. MrAppMaster向MR申请运行多个MapTask任务资源
+1. RM将运行MapTask任务分配给另外两个NodeManager,另外两个NodeManager分别领取任务并创建任务
+
 </details>
 
 <details><summary>任务运行</summary>
+
+1. MR向两个接受到任务的NodeManager发送程序启动脚本,这两个NodeManager分别启动MapTask,MapTask对数据分区排序
+1. MrAppMaster等待所有MapTask运行完毕后,向RM申请容器,运行ReduceTask
+1. ReduceTask向MapTask获取相应分区的数据
+1. 程序运行完毕后,MR会向RM申请注销自己
 
 </details>
 
 <details><summary>进度和状态更新</summary>
 
+Yarn中的任务将其进度和状态(包括counter)返回给应用管理器,客户端每秒(通过mapreduce.client.progressmonitor.pollinterval设置)向应用管理器请求进度更新,展示给用户
+
 </details>
 
 <details><summary>作业完成</summary>
+
+除了向应用管理器请求作业进度外,客户端每5秒都会通过调用waitForCompletion()来检查作业是否完成;时间间隔可以通过mapredue.client.completion.pollinterval来设置,作业完成之后,应用管理器和Container会清理工作状态
+
+作业的信息会被作业历史服务器存储以备之后用户检查
 
 </details>
 

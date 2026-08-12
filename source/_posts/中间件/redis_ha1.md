@@ -49,6 +49,10 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 <details><summary>缺点记录</summary>
 
+1. 主服务器执行bgsave生成rdb文件，会占用大量的CPU,磁盘I/O和内存资源
+1. 主服务器将生成的RDB文件发生给从服务器，会占用大量网络宽带
+1. 从服务器接受RDB文件并载入，会导致从服务器阻塞，无法提供服务
+
 </details>
 
 ![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-2.png)
@@ -56,6 +60,12 @@ replicaof（Redis 5.0 之前使用 slaveof）
 - 2.8版本以后,减少全量同步(full resynchronizaztion)的发生，尽可能使用增量同(partial resynchronization). 使用psync命令代替了sync命令来执行同步操作;psync命令同时具备全量同步和增量同步的功能
 
 <details><summary>psync命令</summary>
+
+- 全量同步与上一版本（sync）一致
+- 增量同步中对于断线重连后的复制，会根据情况采取不同措施；如果条件允许，仍然只发送从服务缺失的部分数据。
+- 偏移量过大, 还是会触发全量同步
+- 在bgsave的过程中,新生成的数据会放到环形buffer中, rdb完成后,再传输buffer数据
+- 如果bgsave过程中,buffer超出了最大限制,会触发全量同步
 
 </details>
 
@@ -72,17 +82,42 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 <details><summary>?如果是主服务切换时，是否也能进行增量同步</summary>
 
+psync2跑了服务器运行id，采用了replid和replid2来代替，其中replid存储的是当前主服务的允许id，replid2保存的是上一个主服务器运行ID
+
+- 主服务器运行id（replid）
+- 上个主服务器运行id（replid2）
+
+通过replid和replid2可以解决主服务器切换时候，增量同步问题:
+
+- 如果replid等于当前主服务器的运行id，那么判断同步方式增量/全量同步
+- 如果replid不想等，则判断replid2是否相等（是否同属于上一个主服务器的从服务器），如果相等，依然可以选择增量/全量同步;如果不想等则只能进行全量同步
+
 </details>
 
 <details><summary>?主从库间网络断了怎么办</summary>
+
+redis2.8之前，断开后重新连接会出现一次全量复制，开销非常大
+
+从redis2.8开始，网络断开之后，主从库采用了增量复制的方式继续同步;增量复制只会把主从库从网络断开期间主库受到的命令，同步给从库
+
+增量复制时，主从库之间具体是怎么保持同步的呢？这里的奥妙就在于 repl_backlog_buffer 这个缓冲区。我们先来看下它是如何用于增量命令的同步的。当主从库断连后，主库会把断连期间收到的写操作命令，写入 replication buffer，同时也会把这些操作命令也写入 repl_backlog_buffer 这个缓冲区
+
+如果replaceBuffer满了，也会触发重新的全量复制 
+
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-5.png)
 
 </details>
 
 <details><summary>？为什么主从库的复制不使用AOF</summary>
 
+- RDB文件是二进制文件，无论是要把RDB写入磁盘，还是通过网络传输RDB，IO效率都比记录和传输AOF的高
+- 在从库断进行恢复时，用RDB的恢复效率要高于用AOF
+
 </details>
 
 <details><summary>如果主从之间，从节点过多，可能导致主节点传输RDB文件效率问题，可以采纳树结构</summary>
+
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-6.png)
 
 </details>
 
@@ -94,14 +129,14 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 哨兵会每隔1秒给所有的主从节点发送PING命令，当主从节点受到PING命令后，会发送一个响应命令给哨兵，这样就可以判断它们是否正常运行
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-5.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-7.png)
 
 ## 发现故障
 
 - 如果主节点或者从节点没有在规定的时间内响应哨兵，哨兵就会将它们标记为 \[主观下线\]
 - 并且告知其他哨兵，ping该节点，超过半数确认是否 \[客观下线\]
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-6.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-8.png)
 
 ## 故障转移
 
@@ -124,9 +159,15 @@ replicaof（Redis 5.0 之前使用 slaveof）
 - 第一，拿到半数以上的赞成票
 - 第二，拿到的票数同时还需要大于等于哨兵配置文件中的quorum值
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-7.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-9.png)
 
 <details><summary>哨兵节点至少要有3个</summary>
+
+如果哨兵集群中有2个哨兵节点，此时如果一个哨兵想要成为leader，必须获得2票，而不是1票;所以，如果哨兵集群中有个哨兵挂掉了，那么就只剩一个哨兵了，如果这个哨兵想要成为 Leader，这时票数就没办法达到 2 票，就无法成功成为 Leader，这时是无法进行主从节点切换的
+
+因此，通常我们至少配置3个哨兵节点; 这时,如果哨兵集群中有哨兵挂掉了，那么还剩下两个哨兵，如果这个哨兵想成为leader，这时还是有机会达到2票的，所以还是可以选举成功的，不会导致无法进行主从节点切换
+
+你要问，如果 3 个哨兵节点，挂了 2 个怎么办？这个时候得人为介入了，或者增加多一点哨兵节点。
 
 </details>
 
@@ -134,17 +175,41 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 <details><summary>**第一步，从已下线的主节点属下的所有从节点中，挑选出一个状态良好，数据完整的从节点，然后向这个从节点发送 SLAVE no one 命令 ，将这个从节点转换为主节点**</summary>
 
+### 先剔除网络不好的
+
+- 首先要把网络状态不好的从节点给过滤掉( 5 秒内未回复 info 命令的 )
+- 首先把已经下线的从节点过滤掉
+- 然后把以往网络连接状态不好的从节点也给过滤掉。(down-after-milliseconds \* 10)
+
+### 第一轮考察： 优先级最高的从节点胜出
+
+ slave-priority 配置项，可以给从节点设置优先级
+
+### 第二轮考察：选择复制偏移量最大，也就是复制最完整的从节点
+
+如果某个从节点的 slave_repl_offset 最接近 master_repl_offset，说明它的复制进度是最靠前的，于是就可以将它选为新主节点
+
+### **第三轮考察：ID 号小的从节点胜出**
+
+什么是 ID 号？每个从节点都有一个编号，这个编号就是 ID 号，是用来唯一标识从节点的
+
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-10.png)
+
+选举完成后,哨兵leader向被选中的server2从节点发送 SLAVEOF no one命令，让这个从节点接触从节点的身份，将其变为新主节点
+
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-11.png)
+
 </details>
 
 ### 3.从节点指向新主节点
 
 当新主节点出现之后，哨兵 leader 下一步要做的就是，让已下线主节点属下的所有「从节点」指向「新主节点」，这一动作可以通过向「从节点」发送 `SLAVEOF` 命令来实现
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-8.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-12.png)
 
 所有从节点指向新主节点后的拓扑图如下：
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-9.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-13.png)
 
 ### 4.通知客户端的主节点已更换
 
@@ -152,7 +217,7 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 这主要**通过 Redis 的发布者/订阅者机制来实现**的。每个哨兵节点提供发布者/订阅者机制，客户端可以从哨兵订阅消息
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-10.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-14.png)
 
 客户端和哨兵建立连接后，客户端会订阅哨兵提供的频道
 
@@ -162,7 +227,7 @@ replicaof（Redis 5.0 之前使用 slaveof）
 
 故障转移操作最后要做的是，继续监视旧主节点，当旧主节点重新上线时，哨兵集群就会向它发送 `SLAVEOF` 命令，让它成为新主节点的从节点，如下图
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-11.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-15.png)
 
 ## 哨兵集群如何工作
 
@@ -182,7 +247,7 @@ sentinel monitor <master-name> <ip> <redis-port> <quorum>
 
 在下图中，哨兵 A 把自己的 IP 地址和端口的信息发布到`__sentinel__:hello` 频道上，哨兵 B 和 C 订阅了该频道。那么此时，哨兵 B 和 C 就可以从这个频道直接获取哨兵 A 的 IP 地址和端口号。然后，哨兵 B、C 可以和哨兵 A 建立网络连接
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-12.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-16.png)
 
 通过这个方式，哨兵 B 和 C 也可以建立网络连接，这样一来，哨兵集群就形成了
 
@@ -195,6 +260,22 @@ sentinel monitor <master-name> <ip> <redis-port> <quorum>
 问题出在,当从升级为master的时候，有2个master，并且2个都在接受写入数据;旧的 新的master都在写入数据，但是从的只同步了新的master，写进旧的master的数据没同步，并且随着自己的降级也没了，丢失了
 
 <details><summary>?脑裂如何处理</summary>
+
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-17.png)
+
+```java
+# master 须要有至少 x 个副本连接。
+min-slaves-to-write x
+# 数据复制和同步的延迟不能超过 x 秒。
+min-slaves-max-lag x
+```
+
+注意高版本中,redis已经修改了这2个配置
+
+```java
+# min-replicas-to-write x
+# min-replicas-max-lag x
+```
 
 </details>
 
@@ -226,15 +307,23 @@ Redis Cluster集群模式具备的特点如下:
 1. 分片内采用一主多从保证高可用，并提供复制和故障恢复功能。在实际中，通过会将主从分布在不同的机房，避免机房出现故障导致整个分片出问题
 1. 客户端与Redis节点直连，不需要中间代理层(Proxy);客户端不需要连接集群所有节点，连接集群中任何一个可用的节点即可
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-13.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-18.png)
 
 目前redis的分区规则是： hash分区，分成了 16384 个哈希槽
 
 RedisCluster采用了哈希分区的“虚拟槽分区”方式（哈希分区分节点取余，一致性哈希分区和虚拟槽分区）
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-14.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-19.png)
 
 <details><summary>集群之后的扩容</summary>
+
+如何保证集群在线扩容的安全性？ Redis集群要添加分片，槽的迁移怎么保证无损
+
+比如集群已经对外提供服务，原本有3分片，准备新增2个，怎么在不下线的情况下，无损的从原有的3个分片指派若干槽这2个分片？
+
+Redis使用ASK错误来保证在线扩容的安全性;在槽的迁移过程中若有客户端访问，依旧先访问源节点，源节点会在自己的数据库里查找指定的键，如果找得到的话，就直接执行客户端发送的命令
+
+如果没有找到，说明该键可能被迁移到目标节点了，源节点将向客户端返回一个ASK错误，该错误会将客户端转向正在倒入槽的目标节点，并再次发送之前要指令的命令,从而获取结果
 
 </details>
 
@@ -249,7 +338,7 @@ RedisCluster采用了哈希分区的“虚拟槽分区”方式（哈希分区�
 - 某个节点认为宁外一个节点不可用，‘偏见’，只代表一个节点对另外一个节点的判断，不是所有节点的认知
 - 如果节点1发现与节点2最后通信时间超过node-timeout，则把节点2标识为pfail状态
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-15.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-20.png)
 
 ### 客观下线
 
@@ -261,13 +350,13 @@ RedisCluster采用了哈希分区的“虚拟槽分区”方式（哈希分区�
 
 2.当前节点把主观下线的消息内容添加到自身的故障列表之后，会尝试对故障节点进行客观下线操作
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-16.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-21.png)
 
 ## 准备选举时间
 
 **使偏移量最大的从节点具备优先级成为主节点的条件**
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-17.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-22.png)
 
 ## 替换主节点
 
@@ -310,15 +399,19 @@ RedisCluster采用了哈希分区的“虚拟槽分区”方式（哈希分区�
 
 如果此时正在进行集群扩展或者缩空操作，当客户端向正确的节点发送命令时，槽及槽中数据已经被迁移到别的节点了，就会返回ask，这就是ask重定向机制
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-18.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-23.png)
 
 ## moved重定向
 
 是路由层面的，直接修改迁移之后的槽映射关系，不用像ask错误一样，返回错误再重新路由
 
-![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-19.png)
+![Redis主从,哨兵，集群](/images/posts/redis_ha1/img-24.png)
 
 <details><summary>**moved异常与ask异常的相同点和不同点**</summary>
+
+1. 两者都是客户端重定向
+1. moved异常： 槽已经确定迁移，即槽已经不在当前节点
+1. ask异常：   槽还在迁移中
 
 </details>
 

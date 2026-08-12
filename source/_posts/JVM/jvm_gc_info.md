@@ -52,12 +52,30 @@ objB.instance = objA;
 
 1. 强引用
   - **只要**强引用关系存在**，垃圾回收器永远不会回收调掉被引用的对象**
+    - 使用new一个新对象的方式来创建强引用
+    - Object obj = new Object();
 1. 软引用
   - **一些有用但是并非必须的对象，在系统发生OOM之前，将会对这些对象列进回收范围之中进行第二次回收**
+    1. 使用SoftReference类来实现软引用
+    1. Object obj = new Object();
+    1. SoftReference<Object> softReference = new SoftReference<>(obj);
 1. 弱引用
   - **只能生存到下一次垃圾收集之前，当垃圾收集工作时，无论当前内存是否满足，都会被回收**
+
+    ```java
+    使用 WeakReference 类来实现弱引用 
+    Object obj = new Object();
+    WeakReference<Object> softReference = new WeakReference<>(obj);
+    ```
+
 1. 虚引用
   - **幽灵引用或者幻影引用。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用 取得一个对象实例。 为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知 业界暂无使用场景， 可能被JVM团队内部用来跟踪JVM的垃圾回收活动**
+
+    ```java
+    使用 PhantomReference 来实现虚引用
+    Object obj = new Object();
+    PhantomReference<Object> softReference = new PhantomReference<Object>(obj);
+    ```
 
 # 垃圾什么时候回收
 
@@ -222,6 +240,11 @@ JVM在很多场景下使用到safepoint, 最常见的场景就是GC的时候。�
 
 <details><summary>**在并发标记阶段使用的标记算法**</summary>
 
+1. 根一般是黑色的
+1. 该对象的所有子类对象被扫过了就是黑色
+1. 该对象的子类被扫了一部分，但是没有完全扫完，就是灰色
+1. 扫描完成,剩下没被扫到的就是白色
+
 </details>
 
 ![JVM垃圾回收](/images/posts/jvm_gc_info/img-10.png)
@@ -238,6 +261,9 @@ JVM在很多场景下使用到safepoint, 最常见的场景就是GC的时候。�
 导致被引用的对象被当成垃圾误删除,严重bug
 
 <details><summary>处理方式</summary>
+
+- 增量更新: 当黑色的插入新的指向白色对象的引用关系时，就将这个新插入的引用记录下来，等待并发结束之后，再将这些记录过的关系引用中黑色对象为根，重新扫描一次。简化理解为：黑色对象一旦新插入了指向白色对象的引用后之后，它就变回了灰色对象
+- 原始快照: 当灰色对象要删除指向白色对象的引用关系时，要将这个删除的引用记录下来，在并发扫描结束之后，再将这些记录过的引用关系中的灰色对象为根，重新扫描一次，这样就能扫描到白色的对象，将白色的对象直接标记为黑色(目的是让这种对象在本轮gc清理中存活下来，待下一轮gc的时候，重新扫描，这个对象也有可能是浮动垃圾)
 
 </details>
 
@@ -296,6 +322,10 @@ void pre_load_barrier(oop* field) {
 ```
 
 <details><summary>**以Java HotSpot VM为例，其并发标记时对漏标的处理方案如下**</summary>
+
+- CMS: 写屏障 + 增量更新
+- G1,Shenandoah: 写屏障 + 原始快照
+- ZGC: 读屏障
 
 </details>
 
@@ -397,6 +427,16 @@ Serial Old 是 Serial 收集器的老年代版本,也是Client模式下的虚拟
 
 <details><summary>CMS 有两个参数：**CMSScheduleRemarkEdenSizeThreshold**、**CMSScheduleRemarkEdenPenetration**，默认值分别是2M、50%。两个参数组合起来的意思是预清理后，eden空间使用超过2M时启动可中断的并发预清理（CMS-concurrent-abortable-preclean），直到eden空间使用率达到50%时中断，进入remark阶段</summary>
 
+总结: 并发可中断预处理,是为了在重新标记前,尽量多做一些事,因为这个期间是属于 "并发标记",不影响用户线程的, 能多干点就多干点, 他的核心思想是,尽量做一次 minor GC,从而清理年轻代的对象,这样扫描老年代的时候,就会降低年轻代指向老年代的引用,从而更快重新标记,
+
+需要达到一些配置条件才能触发
+
+1:eden区使用超过了2MB(可配置)
+
+2:5秒(CMSMaxAbortablePrecleanTime 参数配置)内等不到minor GC就立马中断
+
+3:超过了5秒,还等不到,也可以配置一个参数(CMSScavengeBeforeRemark)强制进行minor GC
+
 </details>
 
 ### 重新标记
@@ -485,21 +525,31 @@ ZGC支持最大的内存数  2的48次方 16T
 
 <details><summary>调用 System.gc()</summary>
 
+此方法的调用是建议 JVM 进行 Full GC，虽然只是建议而非一定，但很多情况下它会触发 Full GC，从而增加 Full GC 的频率，也即增加了间歇性停顿的次数。因此强烈建议能不使用此方法就不要使用，让虚拟机自己去管理它 的内存。可通过 -XX:+ DisableExplicitGC 来禁止 RMI 调用 System.gc()
+
 </details>
 
 <details><summary>老年代空间不足</summary>
+
+老年代空间不足的常见场景为前文所讲的大对象直接进入老年代、长期存活的对象进入老年代等，当执行 Full GC 后空间仍然不足，则抛出 Java.lang.OutOfMemoryError。为避免以上原因引起的 Full GC，调优时应尽量做 到让对象在 Minor GC 阶段被回收、让对象在新生代多存活一段时间以及不要创建过大的对象及数组
 
 </details>
 
 <details><summary>空间分配担保失败</summary>
 
+使用复制算法的 Minor GC 需要老年代的内存空间作担保，如果出现了 HandlePromotionFailure 担保失败， 则会触发 Full GC
+
 </details>
 
 <details><summary>JDK 1.7 及以前的永久代空间不足</summary>
 
+在 JDK 1.7 及以前，HotSpot 虚拟机中的方法区是用永久代实现的，永久代中存放的为一些 class 的信息、常 量、静态变量等数据，当系统中要加载的类、反射的类和调用的方法较多时，永久代可能会被占满，在未配置为采用 CMS GC 的情况下也会执行 Full GC。如果经过 Full GC 仍然回收不了，那么 JVM 会抛出 java.lang.OutOfMemoryError，为避免以上原因引起的 Full GC，可采用的方法为增大永久代空间或转为使用 CMS GC
+
 </details>
 
 <details><summary>Concurrent Mode Failure</summary>
+
+执行 CMS GC 的过程中同时有对象要放入老年代，而此时老年代空间不足（有时候“空间不足”是 CMS GC 时当前的 浮动垃圾过多导致暂时性的空间不足触发 Full GC），便会报 Concurrent Mode Failure 错误，并触发 Full GC
 
 </details>
 

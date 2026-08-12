@@ -42,17 +42,32 @@ async function fetchChunk(pageId, cursor, chunkNumber, attempt = 0) {
 }
 async function fetchAllBlocks(pageId) {
   const blocks = {};
-  let cursor = { stack: [] }, chunk = 0;
-  do {
-    const data = await fetchChunk(pageId, cursor, chunk);
-    for (const [id, rec] of Object.entries(data?.recordMap?.block || {})) {
-      const v = rec?.value?.value || rec?.value;
-      if (v && !blocks[id]) blocks[id] = v;
+  const fetchInto = async (rootId) => {
+    let cursor = { stack: [] }, chunk = 0;
+    do {
+      const data = await fetchChunk(rootId, cursor, chunk);
+      for (const [id, rec] of Object.entries(data?.recordMap?.block || {})) {
+        const v = rec?.value?.value || rec?.value;
+        if (v && !blocks[id]) blocks[id] = v;
+      }
+      cursor = data?.cursor || { stack: [] };
+      chunk++;
+      if (cursor.stack && cursor.stack.length) await sleep(200);
+    } while (cursor.stack && cursor.stack.length && chunk < 30);
+  };
+  await fetchInto(pageId);
+  // 补抓懒加载内容: toggle 等折叠块的子块不随页面返回,需以父块 id 为根单独拉取
+  for (let round = 0; round < 6; round++) {
+    const parents = new Set();
+    for (const b of Object.values(blocks)) {
+      if ((b.content || []).some(cid => !blocks[cid])) parents.add(b.id);
     }
-    cursor = data?.cursor || { stack: [] };
-    chunk++;
-    if (cursor.stack && cursor.stack.length) await sleep(200);
-  } while (cursor.stack && cursor.stack.length && chunk < 30);
+    parents.delete(pageId);
+    if (!parents.size) break;
+    for (const pid of parents) {
+      try { await fetchInto(pid); await sleep(120); } catch (e) { /* 单个失败不阻塞 */ }
+    }
+  }
   return blocks;
 }
 
@@ -334,7 +349,11 @@ function frontMatter(p, ctx) {
   await Promise.all(posts.map((p, i) => pageLimit(async () => {
     try {
       const { slug, out, nblocks } = await convertOne(p, i, posts.length);
-      fs.writeFileSync(path.join(POSTS_DIR, slug + '.md'), out, 'utf8');
+      // 按分类目录写入(与现有目录组织保持一致)
+      const catDir = (p.category && p.category.trim()) || '未分类';
+      const dir = path.join(POSTS_DIR, catDir);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, slug + '.md'), out, 'utf8');
       report.ok.push({ slug, title: p.title, blocks: nblocks });
       console.log(`[${i + 1}/${posts.length}] ✓ ${p.title} (${nblocks} blocks)`);
     } catch (e) {

@@ -144,6 +144,11 @@ getenforce
 
 <details><summary>如果输出结果为Permissive 或Disabled</summary>
 
+1. 打开 /etc/selinux/config 文件
+1. 将SELINUX = enforcing 这一行改为 SELINUX= permissive
+1. 保存并关闭文件
+1. 重新启动系统或运行 setenforce 0 命令来立即禁用 SELinux
+
 </details>
 
 ## 禁用透明大页配置

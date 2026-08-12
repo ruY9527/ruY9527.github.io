@@ -17,6 +17,9 @@ notion_status: "Invisible"
 
 <details><summary>防止脑裂</summary>
 
+1. ssh发送kill指令
+1. 调用用户自定义脚步程序
+
 </details>
 
 ![Hadoop_HA机制](/images/posts/hadoop_ha1/img-1.png)

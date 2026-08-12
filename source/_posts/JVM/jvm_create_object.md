@@ -159,6 +159,10 @@ Class对象，也是在堆，是提供给程序去访问方法区类信息的入
 
 <details><summary>关于 Minor GC 和 Full GC</summary>
 
+Minor GC: 发生在新生代上，因为新生代对象存活的时间很短，因此Minor GC会频繁执行，执行的速度一般会比较快
+
+Full GC: 发生在老年代上，老年代对象和新生代的相反，其存活时间长，因此 Full GC 很少执行，而且执 行速度会比 Minor GC 慢很多
+
 </details>
 
 ## 大对象直接进入老年代
@@ -188,6 +192,9 @@ JVM 并不是永远地要求对象的年龄必须达到 MaxTenuringThreshold 才
 - 如果大于，Minor GC 一定是安全的
 
 <details><summary>如果小于，虚拟机会查看 HandlePromotionFailure 参数，看看是否允许担保失败</summary>
+
+- 允许失败：尝试着进行一次 Minor GC
+- 不允许失败：进行一次 Full GC
 
 </details>
 

@@ -18,6 +18,10 @@ cover: /images/posts/redis_thy_delete/img-1.png
 
 <details><summary>Redis的过期删除策略有3种</summary>
 
+- 惰性删除
+- 定期删除
+- 定时删除
+
 </details>
 
 ## 惰性删除
@@ -134,6 +138,8 @@ Redis实现LRU的优点：
 - 不用在每次数据访问时都移动链表项，提升了缓存的性能
 
 <details><summary>问题（缓存污染）：</summary>
+
+无法解决缓存污染问题，比如应用一次读取了大量的数据，而这些数据只会读取一次，那么这些数据会留存在Redis缓存中很长一段时间，造成缓存污染。因此Redis4采用LFU算法来解决这个问题
 
 </details>
 

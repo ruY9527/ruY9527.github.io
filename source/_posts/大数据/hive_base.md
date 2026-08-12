@@ -31,6 +31,10 @@ JDBC/ODBC: jdbc访问hive
 
 <details><summary>Hive客户端</summary>
 
+1. Thrift Clients: Hive的Server是基于Apache Thrift的,所以支持thrift客户端的查询请求
+1. JDBC Clinet: 使用Java的JDBC driver连接Hive, JDBC driver使用 Thrift与Hive进行通信
+1. ODBC Client: Hive的ODBC driver使用基于ODBC协议连接hive,与JDBC driver类似,ODBC driver也是通过thrift与Hive server进行通信
+
 </details>
 
 ## Metastore
@@ -52,9 +56,18 @@ JDBC/ODBC: jdbc访问hive
 
 <details><summary>优点</summary>
 
+- 提供了类SQL语法操作接口,具备快速开发的能力(简单,容易上手)
+- 避免了去写MapReduce,减少了开发者的学习成本
+- Hive优势在于处理大数据,在处理小数据时没有优势,因为Hive的执行延迟较高
+- Hive支持用户自定义函数,用户可以根据自己的需求来实现自己的函数
+
 </details>
 
 <details><summary>缺点</summary>
+
+- Hive自动生成MapReduce作业，通常情况下不够智能化;数据挖掘方面不擅长（多个子查询），由于MapReduce数据处理流程的限制，效率更高的算法却无法实现
+- Hive的执行延迟比较高，因为Hive常用于数据分析，对实时性要求不高的场合;Hive调优比较困难，粒度较粗
+- hive分析的数据是存储在HDFS上的，而HDFS仅支持追加写，所以在hive中不能update和delete，只能select和insert
 
 </details>
 
@@ -83,9 +96,21 @@ Hive 3.x版本之上是可以支持acid的
 
 <details><summary>隐式类型转换规则</summary>
 
+任何整数类型都可以隐式的转换为一个范围更广的类型,如INT可以转换成BIGINT
+
+所有的整数类型,FLOAT和STRING类型可以隐式转换成DOUBLE
+
+TINTINT,SMALLINT,INT都可以转换为FLOAT
+
+BOOLEAN类型不可以转换成其它的类型
+
 </details>
 
 <details><summary>CAST操作显示进行数据类型转换</summary>
+
+CAST(’1’ as INT) 将字符串转换整数
+
+强制类型转换失败,如执行CAST(’x’ as INT),表达式就会返回null
 
 </details>
 
@@ -290,17 +315,32 @@ desc function extended 函数名: 展开详细说明
 
 <details><summary>语法</summary>
 
+Function（arg1 ……） over（\[partition by arg1 ……\] \[order by arg1 ……\] \[<window_expression>\]）
+
 </details>
 
 <details><summary>聚合函数</summary>
+
+sum()、max()、min()、avg()
 
 </details>
 
 <details><summary>排序函数</summary>
 
+- rank() 排序相同时会重复,总数不变
+- row_number() 排序相同时会重复,总数会减少
+- dens_rank() 会根据顺序计算,不重复不减少
+- ntile() Ntile函数,为已排序的行,均分为指定数量的组,组号按顺序排列,返回组号;不支持rows between;ntile(5) over(order by orderdate) sorted from business
+
 </details>
 
 <details><summary>统计比较函数</summary>
+
+lead()
+
+lag(): LAG (scalar_expression \[,offset\] \[,default\]) OVER (\[query_partition_clause\] order_by_clause); lag函数用于统计窗口内往上的第n行值;参数scalar_pexpression为列名,参数offset为往上几行,参数default是设置的默认值(当往上第n行为null时,取默认值,否则就是null)
+
+first_value(): 返回partition by的第一个分区
 
 </details>
 
@@ -342,37 +382,96 @@ Explain : EXPLAIN \[EXTENDED | DEPENDENCY | AUTHORIZATION\] query
 
 <details><summary>列裁剪和分区裁剪</summary>
 
+只读取查询中所需要的列,忽视其它的列,这样可以做可以节省读取开销
+
+1. 列裁剪: 查询时只读取需要的列
+1. 分区裁剪: 查询时只读取需要的分区
+
 </details>
 
 <details><summary>group by</summary>
+
+map端聚合参数设置: set hive.map.aggr = true
+
+map端进行聚合操作的条目数目: set hive.groupby.mapaggr.checkinterval = 100000
+
+有数据倾斜的时候进行负载均衡（默认是false）: set hive.groupby.skewindata = true
+
+当开启数据负载的时候,会生成两个查询计划会有两个MRJob:
+
+1. 第一个MRJob中，Map的输出结果会随机分布到Reduce中，每个Reduce做部分聚合操作，并输出结果，这样处理的结果是相同的Group By Key有可能被分发到不同的Reduce中，从而达到负载均衡的目的
+1. 第二个MRJob再根据预处理的数据结果按照Group By Key分布到Reduce中（这个过程可以保证相同的Group By Key被分布到同一个Reduce中），最后完成最终的聚合操作
 
 </details>
 
 <details><summary>CBO优化</summary>
 
+CBO成本优化器,代价最小的执行计划就是最好的执行计划;Hive在提供最终执行前,优化每个查询的执行逻辑和物理逻辑执行计划
+
+join的时候表的顺序关系: 前面的表都会被加载到内存中,后面的表进行磁盘顺序扫描
+
+通过 "hive.cbo.enable" 来开启。在 Hive 1.1.0 之后，这个属性是默认开启的，它可以自动优化HQL中多个Join的顺序，并选择合适的Join算法
+
 </details>
 
 <details><summary>谓词下推</summary>
+
+保证结果正确的前提下,将SQL语句中的where谓词逻辑都尽可能提前执行,减少下游处理的数据量
+
+通过谓词下推,过滤条件将在map端提前执行,减少map端的输出,降低了数据IO,节约资源,提升性能
+
+set hive.optimize.ppd = true; #谓词下推，默认是true
 
 </details>
 
 <details><summary>MapJoin</summary>
 
+MapJoin 是将 Join 双方比较小的表直接分发到各个 Map 进程的内存中，在 Map 进程中进行 Join 操 作，这样就不用进行 Reduce 步骤，从而提高了速度
+
+用MapJoin把小表全部加载到内存在Map端进行Join，避免Reducer处理
+
+设置自动选择MapJoin,set hive.auto.convert.join=true; #默认为true
+
+大表小表阈值设置(默认25M以下认为是小表): set hive.mapjoin.smalltable.filesize=25000000;
+
 </details>
 
 <details><summary>大表,小表SMB JOIN</summary>
+
+sort merge bucket join
 
 </details>
 
 <details><summary>数据倾斜</summary>
 
+数据倾斜现象: 一个或者少数几个任务执行的很慢甚至最终执行失败
+
+数据过量现象: 所有任务都执行的很慢
+
+按照key分组后,少量的任务负载着绝大部分数据的计算,也就是说,产生数据倾斜的HQL中一定存在着分组的操作;单表携带了Group by字段的查询和两表(多表)join的查询
+
 </details>
 
 <details><summary>表单数据倾斜</summary>
 
+参数优化：
+
+- 在Map端进行聚合，默认为True: set hive.map.aggr = true
+- Map端进行聚合操作的条目数目: set hive.groupby.mapaggr.checkinterval = 100000
+- 数据倾斜的时候进行负载均衡（默认是false）
+- set hive.groupby.skewindata = true
+
+增加reduce数量:
+
+- 每个reduce处理的数据量默认是256MB: set hive.exec.reducers.bytes.per.reducer=256000000; 每个任务最大的reduce数,默认是1009,set hive.exec.reducers.max=1009;N=min(参数2,总输入数据量/参数1)
+- 调整reduce个数方法,set mapreduce.job.reduces = 15;
+
 </details>
 
 <details><summary>join数据倾斜优化</summary>
+
+- join的键对应的记录条数超过这个值则会进行分拆,值根据具体数据量设置;set hive.skewjoin.key=100000;
+- join过程中出现倾斜应该设置为true;set hive.optimize.skewjoin=false;
 
 </details>
 

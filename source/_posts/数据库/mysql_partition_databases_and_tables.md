@@ -112,13 +112,28 @@ cover: /images/posts/mysql_partition_databases_and_tables/img-1.png
 
 <details><summary>范围切片</summary>
 
+- 优点： 天然水平扩展;单表大小可控
+- 缺点：存在明显的写偏移
+
+![MySql分库分表](/images/posts/mysql_partition_databases_and_tables/img-4.png)
+
 </details>
 
 <details><summary>中间映射表</summary>
 
+- 优点： 灵活
+- 缺点： 引入额外的单点，增加了流程的复杂度
+
+![MySql分库分表](/images/posts/mysql_partition_databases_and_tables/img-5.png)
+
 </details>
 
 <details><summary>hash切分</summary>
+
+- 优点： 数据分片比较均匀，不容易出现热点和访问并发的瓶颈
+- 缺点： 后续扩容需要迁移数据，存在跨节点查询等问题
+
+![MySql分库分表](/images/posts/mysql_partition_databases_and_tables/img-6.png)
 
 </details>
 

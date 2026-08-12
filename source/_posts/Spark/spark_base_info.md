@@ -24,6 +24,12 @@ Spark是一种基于内存的快速和通用,可扩展的大数据分析计算�
 
 <details><summary>与MR进行对比</summary>
 
+1. MR是基于磁盘的,Spark是基于内存
+1. MR的task是进程
+1. spark的task是线程，在executor进程里执行的线程
+1. MR在Container里执行（留有接口方便插入），spark在worker里执行（自己用，没有接口）
+1. MR适合做一次计算，Spark适合做迭代计算
+
 </details>
 
 hadoop MR 框架溢出写磁盘次数多,不合适迭代算,只适合一次计算;Spark框架计算块的原因是中间结果不罗盘,spark的shuffle也是要罗盘的
@@ -42,21 +48,73 @@ hadoop MR 框架溢出写磁盘次数多,不合适迭代算,只适合一次计�
 
 <details><summary>Standalone模式</summary>
 
+Master和Worker模式,Master职责负责资源的管理和分配,相当于ReousrceManager;Worker资源节点与任务执行节点(相当于NodeManager);Master和Worker都是随着集群的启动而启动,集群的消失而消失;Master和Worker只有standalone模式才有
+
 </details>
 
 <details><summary>Mesos模式</summary>
+
+使用mesos平台进行资源与任务的调度
 
 </details>
 
 <details><summary>Yarn模式</summary>
 
+Driver职责:
+
+- 将代码转化成job执行
+- 提交task到executor
+- 监控task执行状况
+- 负责程序运行过中ui界面展示
+
+Executor职责:
+
+- 负责执行task
+
+Driver和Executor是随着任务提交而启动的,随着任务完成而消失的
+
 </details>
 
 <details><summary>Spark on yarn client模式</summary>
 
+Driver和Client都在SparkSubmit进程中,此时SparkSubmit进程不能关闭,关闭之后Driver消失程序中止
+
+工作流程
+
+1. 通过bin/sparksubmit提交任务生成SparkSubmit进程,在进程中创建Client客户端与Driver
+1. Client向ResourceManager注册任务
+1. RM向Client返回路径,任务id
+1. Client会将RM返回的路径与任务id拼接成新路径,上传jar包到路径中
+1. Client向RM申请启动ApplicationMaster
+1. RM会在其中一个NodeManager中启动AM
+1. AM向RM申请计算资源
+1. RM会将资源列表返回给AM
+1. AM会向NM申请启动Executor
+1. Executor启动之后会向Driver反向注册
+1. Driver提交task到executor执行
+1. 执行完之后,AM会注销自己释放资源
+
 </details>
 
 <details><summary>Spark on yarn cluster模式</summary>
+
+Driver在ApplicationMaster进程中,此时SparkSubmit进程关闭不受影响的,程序不会停止
+
+执行流程如下:
+
+1. 通过bin/sparksubmit提交任务生成SparkSubmit进程,在进程中创建Client客户端
+1. Client向ResourceManager注册任务
+1. RM向Client返回路径,任务id
+1. Client会将RM返回的路径与任务id拼接成新路径,上传jar包到路径中
+1. Client向RM申请启动ApplicationMaster
+1. RM会在其中一个NodeManager中启动AM
+1. 在AM中启动Driver线程
+1. AM向RM申请计算资源
+1. RM会将资源列表返回给AM
+1. AM会向NM申请启动Executor
+1. Executor启动之后会向Driver反向注册
+1. Driver提交task到executor执行
+1. 执行完成之后,AM会注销自己释放资源
 
 </details>
 
@@ -83,21 +141,34 @@ RDD是弹性分布式数据集,RDD代表弹性,可分区,不可变,元素可并�
 
 <details><summary>弹性</summary>
 
+- 存储的弹性: 如果内存充足,中间结果会全部保存在内存中,如果内存不足,数据一部分保存在内存中,一部分保存在磁盘中
+- 计算的弹性: 如果计算出错会自动重试
+- 容错的弹性: 如果RDD数据丢失可以根据依赖关系+封装的计算逻辑重新读取数据重新计算得到数据
+- 分区的弹性: RDD的分区可以自动根据文件的切片动态生成
+
 </details>
 
 <details><summary>不可变</summary>
+
+RDD中只只封装了数据的处理逻辑,如果想要重新改变数据只能生成新的RDD
 
 </details>
 
 <details><summary>可分区</summary>
 
+spark是分布式计算框架,Spark根据文件的切片生成分区,一个切片对应一个分区,后续每个分区计算逻辑是一样,处理的数据不一样,每个分区间是并行的
+
 </details>
 
 <details><summary>可并行计算</summary>
 
+每个分区计算逻辑是一样,处理的数据不一样,每个分区间是并行的
+
 </details>
 
 <details><summary>不存储数据</summary>
+
+RDD中只封装了数据的处理逻辑,不存储数据
 
 </details>
 
@@ -163,6 +234,11 @@ Spark的算子分为两类: Transformation转换算子(生成的是新RDD,不会
 根据木桶效应,最短的木板决定了木桶的容量,因此,对于一只有短板的木桶,其它木板调节得再高也无济于事,最短的木板才是木桶容量的瓶颈
 
 <details><summary>性能优化本质</summary>
+
+1. 性能调优不是一锤子买卖，补齐一个短板，其他板子可能会成为新的短板。因此，它是一个动态、持续不断的过程
+1. 性能调优的手段和方法是否高效，取决于它针对的是木桶的长板还是瓶颈。针对瓶颈，事半功倍；针对长板，事倍功半
+1. 性能调优的方法和技巧，没有一定之规，也不是一成不变，随着木桶短板的此消彼长需要相应的动态切换
+1. 性能调优的过程收敛于一种所有木板齐平、没有瓶颈的状态
 
 </details>
 

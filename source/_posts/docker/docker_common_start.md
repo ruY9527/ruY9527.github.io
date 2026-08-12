@@ -33,6 +33,10 @@ sudo docker run -d --name rocketmq-namesrv --network rocketmq -p 9876:9876 -v /h
 
 <details><summary>> 查看 rocketmq-namesrv 状态</summary>
 
+(base) luohong@luohong:~/coding/dockers/rocketmq$ sudo docker ps
+CONTAINER ID   IMAGE                   COMMAND          CREATED         STATUS        PORTS                                                                   NAMES
+4b6a5f523bfe   apache/rocketmq:4.9.1   "sh mqnamesrv"   2 seconds ago   Up 1 second   10909/tcp, 0.0.0.0:9876->9876/tcp, :::9876->9876/tcp, 10911-10912/tcp   rocketmq-namesrv
+
 </details>
 
 docker cp 容器ID:容器内文件位置 本地位置

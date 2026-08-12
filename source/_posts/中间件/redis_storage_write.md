@@ -36,6 +36,11 @@ Redis服务端一般有**16**个数据库，默认情况下都在**0号**数据�
 
 <details><summary>字典表属性解读</summary>
 
+- table: 键值对哈希表，用于保存数据库中的键值对数
+- size: 字典表的最大容量大小;可以通过配置文件或者启动参数配置
+- used: 字典表已经使用的容量
+- 当 used 达到 size 的一定比例(通常是 5/8)时,Redis 会对表进行扩容.size是二倍扩容
+
 </details>
 
 ![Redis存储原理和持久化](/images/posts/redis_storage_write/img-2.png)
@@ -59,6 +64,14 @@ Redis数据库中的每个键值对的键和值都是RedisObject对象,对应字
 - lru: 记录对象最后一次被访问的时间
 
 <details><summary>ptr: 如果是整数直接存储数据，否则表示指向该数据的指针</summary>
+
+- 高并发写入场景，在条件允许的情况下建议字符串长度控制在39字节以内，减少创建redisObject内存分配次数从而提高性能
+- 通过 DEBUG OBJECT key 来这个 key 占多少字节  , 如下 536 字节
+
+```java
+> debug object dc.lcs.1001
+Value at:0x7f206d9e3720 refcount:1 encoding:ziplist serializedlength:176 lru:7810419 lru_seconds_idle:20
+```
 
 </details>
 
@@ -98,6 +111,8 @@ RDB持久化是指将Redis在内存中的数据以快照的形式写入到磁盘
 ![Redis存储原理和持久化](/images/posts/redis_storage_write/img-6.png)
 
 <details><summary>**快照生成期间，数据被修改，如何同步最新的数据**</summary>
+
+Redis 就会借助操作系统提供的写时复制技术（Copy-On-Write, COW），在执行快照的同时，正常处理写操作, 新写的数据会 copy 一份副本出来, 最终写进 RDB 中
 
 </details>
 
@@ -232,6 +247,11 @@ AOF只是追加日志文件，因此对服务器性能影响较小，**速度比
 修复aof日志文件
 
 <details><summary>redis-check-aof -fix file.aof</summary>
+
+1. 检查AOF文件的一致性和完整性
+1. 尽可能修复损坏的部分，而不丢失数据。从aof日志中提取尽可能提取出有效的命令和数据
+1. 如果无法修复的话,它会提示你是否截断aof文件；如果你选择截断，aof文件会被重写，但最后数据库状态依然会与修复前一致；只是部分指令可能会丢失
+1. 在修复过程中,redis-check-aof会备份你的原始aof文件；所以就算修复后出现问题，你依然可以恢复数据
 
 </details>
 
