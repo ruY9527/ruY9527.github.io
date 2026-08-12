@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>bin/yarn-session.sh -nm testFlink_流批基础入门 | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="😀 这里写文章的前言：Flink基础知识入门案例  📝 基础知识Flink分布式处理引擎，用于有界和无界数据流进行有状态计算 Flink特点    无界数据流：    有界数据流：    把流处理需要的额外数据保存成一个“状态”，然后针对这条数据进行处理，并且更新状态，这就是有所的有状态的流处理  状态在内存中：优点，速度快;缺点：可靠性差 状态在分布式中：优点：可靠性高;缺点：速度慢  �">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>bin/yarn-session.sh -nm testFlink_流批基础入门 | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="😀 这里写文章的前言：Flink基础知识入门案例  📝 基础知识Flink分布式处理引擎，用于有界和无界数据流进行有状态计算 Flink特点   高吞吐和低延迟;每秒处理数百万个事件，毫秒级延迟 结果准确性：Flink提供了事件时间和处理时间语义。用于乱序事件流，事件时间语义仍然能提供一致且准确的结果 精确一次（exactly-once）的状态一致性保证 可以连续到最常用的外部系统，比如Ka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="bin&#x2F;yarn-session.sh -nm testFlink_流批基础入门">
 <meta property="og:url" content="https://ruy9527.github.io/article/post-fe71009a9d/index.html">
 <meta property="og:site_name" content="YangBao">
-<meta property="og:description" content="😀 这里写文章的前言：Flink基础知识入门案例  📝 基础知识Flink分布式处理引擎，用于有界和无界数据流进行有状态计算 Flink特点    无界数据流：    有界数据流：    把流处理需要的额外数据保存成一个“状态”，然后针对这条数据进行处理，并且更新状态，这就是有所的有状态的流处理  状态在内存中：优点，速度快;缺点：可靠性差 状态在分布式中：优点：可靠性高;缺点：速度慢  �">
+<meta property="og:description" content="😀 这里写文章的前言：Flink基础知识入门案例  📝 基础知识Flink分布式处理引擎，用于有界和无界数据流进行有状态计算 Flink特点   高吞吐和低延迟;每秒处理数百万个事件，毫秒级延迟 结果准确性：Flink提供了事件时间和处理时间语义。用于乱序事件流，事件时间语义仍然能提供一致且准确的结果 精确一次（exactly-once）的状态一致性保证 可以连续到最常用的外部系统，比如Ka">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://ruy9527.github.io/images/posts/post-fe71009a9d/img-1.png">
 <meta property="article:published_time" content="2021-07-02T04:00:00.000Z">
@@ -154,20 +154,38 @@
       }
       detectApple()
     })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/post-fe71009a9d/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">bin/yarn-session.sh -nm testFlink_流批基础入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-02T04:00:00.000Z" title="发表于 2021-07-02 12:00:00">2021-07-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T04:53:15.000Z" title="更新于 2025-12-31 12:53:15">2025-12-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="bin/yarn-session.sh -nm testFlink_流批基础入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/post-fe71009a9d/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">bin/yarn-session.sh -nm testFlink_流批基础入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-02T04:00:00.000Z" title="发表于 2021-07-02 12:00:00">2021-07-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T04:53:15.000Z" title="更新于 2025-12-31 12:53:15">2025-12-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="bin/yarn-session.sh -nm testFlink_流批基础入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>😀 这里写文章的前言：<br>Flink基础知识入门案例</p>
 </blockquote>
 <h1 id="📝-基础知识"><a href="#📝-基础知识" class="headerlink" title="📝 基础知识"></a>📝 基础知识</h1><p>Flink分布式处理引擎，用于有界和无界数据流进行有状态计算</p>
 <details><summary>Flink特点</summary>
 
+<ul>
+<li>高吞吐和低延迟;每秒处理数百万个事件，毫秒级延迟</li>
+<li>结果准确性：Flink提供了事件时间和处理时间语义。用于乱序事件流，事件时间语义仍然能提供一致且准确的结果</li>
+<li>精确一次（exactly-once）的状态一致性保证</li>
+<li>可以连续到最常用的外部系统，比如Kafka，Hive，JDBC，HDFS，Redis等</li>
+<li>高可用：本身高可用的设置，加上k8s，yarn和mesos的紧密集成</li>
+</ul>
 </details>
 
 <details><summary>无界数据流：</summary>
 
+<ul>
+<li>有定义流的开始，但没有定义流的结束</li>
+<li>无休止的产生数据</li>
+<li>无界流的数据必须持续处理，即数据被摄取后需要立刻处理;我们不能等到所有数据到达后再处理，数据是无限的</li>
+</ul>
 </details>
 
 <details><summary>有界数据流：</summary>
 
+<ul>
+<li>有定义流的开始，也有定义流的结束</li>
+<li>有界流可以摄取所有的数据后再进行计算</li>
+<li>有界流所有的数据可以被排序，所以不需要有序摄取</li>
+<li>有界流处理通常被成为批处理</li>
+</ul>
 </details>
 
 <p>把流处理需要的额外数据保存成一个“状态”，然后针对这条数据进行处理，并且更新状态，这就是有所的有状态的流处理</p>
@@ -199,6 +217,11 @@
 <p>执行脚本向Yarn申请资源，开启一个Yarn会话</p>
 <details><summary>参数解读</summary>
 
+<p>-d: 分离模式，如果你不想让Flink Yarn客户端一直前台运行，可以使用这个参数，即使关闭掉了当前会话，Yarn Session也可以后台运行</p>
+<p>-jm(JobManagerMemory):配置JobManager所需内存，默认单位是MB</p>
+<p>-nm(—name):配置在Yarn UI界面上显示的名字</p>
+<p>-qu(—queue):指定Yarn队列名</p>
+<p>-tm(—taskManager):配置每个TaskManager所使用的内存</p>
 </details>
 
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">bin/yarn-session.sh -nm test</span><br></pre></td></tr></table></figure>
@@ -209,6 +232,9 @@
 <h2 id="单作业模式"><a href="#单作业模式" class="headerlink" title="单作业模式"></a>单作业模式</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">bin/flink run -d -t yarn-per-job -c com.atguigu.wc.SocketStreamWordCount FlinkTutorial-<span class="number">1.0</span>-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
 
 <details><summary>如果有错误</summary>
+
+<p>在flink的&#x2F;opt&#x2F;module&#x2F;flink-1.17.0&#x2F;conf&#x2F;flink-conf.yaml配置文件中设置 classloader.check-leaked-classloader: false</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Exception in thread “Thread-<span class="number">5</span>” java.lang.IllegalStateException: Trying to access closed classloader. Please check <span class="keyword">if</span> you store classloaders directly or indirectly in <span class="keyword">static</span> fields. If the stacktrace suggests that the leak occurs in a third party library and cannot be fixed immediately, you can disable <span class="built_in">this</span> check with the configuration ‘classloader.check-leaked-classloader’.</span><br><span class="line">at org.apache.flink.runtime.execution.librarycache.FlinkUserCodeClassLoaders</span><br></pre></td></tr></table></figure>
 
 </details>
 
@@ -231,6 +257,16 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">bin/flink cancel -t yarn-application -Dyarn.application.id=application_XXXX_YY &lt;jobId&gt;</span><br></pre></td></tr></table></figure>
 
 <details><summary>上传jar包等环境到hdfs</summary>
+
+<p>可以通过yarn.provided.lib.dirs配置选项指定位置，将flink的依赖上传到远程</p>
+<p>1:上传flink的lib和plugins到HDFS上</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">hadoop fs -mkdir /flink-dist</span><br><span class="line">hadoop fs -put lib/ /flink-dist</span><br><span class="line">hadoop fs -put plugins/ /flink-dist</span><br></pre></td></tr></table></figure>
+
+<p>2：上传自己jar到HDFS</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">hadoop fs -mkdir /flink-jars</span><br><span class="line">hadoop fs -put FlinkTutorial-<span class="number">1.0</span>-SNAPSHOT.jar /flink-jars</span><br></pre></td></tr></table></figure>
+
+<p>3：提交作业</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">bin/flink run-application -t yarn-application	-Dyarn.provided.lib.dirs=<span class="string">&quot;hdfs://hadoop102:8020/flink-dist&quot;</span>	-c com.atguigu.wc.SocketStreamWordCount  hdfs:<span class="comment">//hadoop102:8020/flink-jars/FlinkTutorial-1.0-SNAPSHOT.jar</span></span><br></pre></td></tr></table></figure>
 
 </details>
 
@@ -276,10 +312,12 @@
 <p>一个数据在算子之间传输数据的形式可以是一对一的(one to one)的直通(forwarding),也可以是重分区（redistributing）模式</p>
 <details><summary>一对一模式</summary>
 
+<p>数据维护着分区以及元素的顺序。比如source和map算子，source算子读取数据之后，可以直接发送给map算子处理，它们之间不需要重分区，也不需要调整数据的顺序。这就意味着map算子的子任务，看到元素的个数和顺序跟source算子的子任务产生的完全一样，保持这一对一的关系。map，filter，flatMap等算子</p>
 </details>
 
 <details><summary>重分区</summary>
 
+<p>数据的分区发生改变，比如map和后面的keyBy和window算子之间，以及keyBy&#x2F;window算子和Sink算子之间，都是这样。每一个算子的子任务，会根据数据传输策略，把数据发送到不同的下游任务目标任务。这些传输方式都会引起重分区的过程;类似spark的shuffle</p>
 </details>
 
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fe71009a9d/img-6.png" alt="bin&#x2F;yarn-session.sh -nm testFlink_流批基础入门"></p>
@@ -294,10 +332,14 @@
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fe71009a9d/img-8.png" alt="bin&#x2F;yarn-session.sh -nm testFlink_流批基础入门"></p>
 <details><summary>任务槽配置</summary>
 
+<p>在 flink-conf.yaml 中进行配置：taskmanager.numberOfTaskSlots: 8 ；默认是一个</p>
+<p>目前slot仅仅用来隔离内存的，不会涉及CPU隔离;在具体应用中，可以将slot数量配置为机器的CPU核心数，尽量避免不同任务之间对CPU的竞争。</p>
 </details>
 
 <details><summary>任务槽和并行度</summary>
 
+<p>任务槽和并行度都和程序的执行有关，但是两者完全不同的概念。</p>
+<p>任务槽是静态的概念，是指TaskManager具有的并发执行能力，可以通过参数 taskmanager.numberOfTaskSlots 来进行配置;而</p>
 </details>
 
 <h1 id="🤗-总结归纳"><a href="#🤗-总结归纳" class="headerlink" title="🤗 总结归纳"></a>🤗 总结归纳</h1><h1 id="📎-参考文章"><a href="#📎-参考文章" class="headerlink" title="📎 参考文章"></a>📎 参考文章</h1><blockquote>

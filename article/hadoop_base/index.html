@@ -157,7 +157,7 @@
       }
       detectApple()
     })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/hadoop_base/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">hadoop基础知识</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-04T04:00:00.000Z" title="发表于 2022-02-04 12:00:00">2022-02-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-23T05:14:51.000Z" title="更新于 2023-07-23 13:14:51">2023-07-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="hadoop基础知识"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/hadoop_base/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">hadoop基础知识</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-04T04:00:00.000Z" title="发表于 2022-02-04 12:00:00">2022-02-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-23T05:14:51.000Z" title="更新于 2023-07-23 13:14:51">2023-07-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="hadoop基础知识"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>😀 这里写文章的前言：<br>hadoop基础知识学习概念<br>大数据的特点: volume大量;velcity高速;variety多样;value低价值密度</p>
 </blockquote>
 <h1 id="📝-hadoop框架组件"><a href="#📝-hadoop框架组件" class="headerlink" title="📝 hadoop框架组件"></a>📝 hadoop框架组件</h1><h2 id="Hdfs"><a href="#Hdfs" class="headerlink" title="Hdfs"></a>Hdfs</h2><p>Hadoop Distributed File System:分布式文件系统</p>
@@ -178,10 +178,20 @@
 <h1 id="📝-HDFS"><a href="#📝-HDFS" class="headerlink" title="📝 HDFS"></a>📝 HDFS</h1><p>一种系统来管理多台机器上的文件,分布式文件管理;适合一次写入,多次读出的场景</p>
 <details><summary>优点</summary>
 
+<ul>
+<li>高容错性: 数据保存为多个副本分布于多个datanode;如果误删,是可以协助其它nodedata帮忙协助的</li>
+<li>处理大量数据: 数据规模大,pb级别;数据文件量多,百万规模以上</li>
+<li>在廉价机器服务器上,通过副本机制,提高可用性</li>
+</ul>
 </details>
 
 <details><summary>缺点</summary>
 
+<ul>
+<li>不适合低延迟的数据</li>
+<li>无法高效对大量小文件进行存储;默认分块是按文件切分的,文件太大也会占用一块</li>
+<li>不支持并发写入和随机修改: 一个文件只许有一个写,不支持多线程同时写;仅仅支持append追加,不支持随机修改</li>
+</ul>
 </details>
 
 <h2 id="NameNode"><a href="#NameNode" class="headerlink" title="NameNode"></a>NameNode</h2><p>管理hdfs的名称空间,配置副本策略,管理数据块映射信息,处理客户端的读写请求</p>
@@ -190,10 +200,20 @@
 <p>DataNode启动后向NameNode注册,通过后,周期性(6小时)向NameNode上报所有的快信息;心跳是每3秒一次,心跳返回结果带有NameNode给该DataNode的命令如复制块数据到另一台机器,或删除某个数据块;如果超过10分钟+30s没有收到某个DataNode的心跳,则认为该节点不可用</p>
 <details><summary>数据完整性</summary>
 
+<ul>
+<li>当DataNode读取Block的时候,它会计算checkSum</li>
+<li>如果计算后checkSum,与Block创建的值不一样,说明Block已经损坏</li>
+<li>Client读取其它的DataNode上的Block</li>
+<li>DataNode在其文件创建后周期验证checkSum</li>
+</ul>
 </details>
 
 <details><summary>**块大小或者块太多问题**</summary>
 
+<ul>
+<li>块大小设置的大小,块的数量相对会更多,而块存储起始位置需要寻址时间,块多寻址时间就更长</li>
+<li>快太大,磁盘的传输时间明显大于寻址的时间,因为处理块数据时,会需要很多时间,比较慢</li>
+</ul>
 </details>
 
 <p>块大小的设置,最好根据磁盘的传输速度来决定</p>
@@ -223,26 +243,52 @@
 </ul>
 <h3 id="一个作业流程"><a href="#一个作业流程" class="headerlink" title="一个作业流程"></a>一个作业流程</h3><details><summary>作业提交</summary>
 
+<ol>
+<li>Client端调用job.waitForCompletion方法,向整个集群提交MapReduce作业</li>
+<li>Client向RM申请一个作业id</li>
+<li>RM给client返回改job资源的提交路径和作业id</li>
+<li>Client提交jar包,切片信息和配置文件到资源的资源提交路径</li>
+<li>Client提交完资源后,向RM申请运行MrAppMaster</li>
+</ol>
 </details>
 
 <details><summary>作业初始化</summary>
 
+<ol>
+<li>当RM收到Client请求后,将该job添加到容量调度器中</li>
+<li>某一个空闲的NN领取到该Job</li>
+<li>该NN创建Container并产生MRAppMaster</li>
+<li>下载Client提交的资源到本地</li>
+</ol>
 </details>
 
 <details><summary>任务分配</summary>
 
+<ol>
+<li>MrAppMaster向MR申请运行多个MapTask任务资源</li>
+<li>RM将运行MapTask任务分配给另外两个NodeManager,另外两个NodeManager分别领取任务并创建任务</li>
+</ol>
 </details>
 
 <details><summary>任务运行</summary>
 
+<ol>
+<li>MR向两个接受到任务的NodeManager发送程序启动脚本,这两个NodeManager分别启动MapTask,MapTask对数据分区排序</li>
+<li>MrAppMaster等待所有MapTask运行完毕后,向RM申请容器,运行ReduceTask</li>
+<li>ReduceTask向MapTask获取相应分区的数据</li>
+<li>程序运行完毕后,MR会向RM申请注销自己</li>
+</ol>
 </details>
 
 <details><summary>进度和状态更新</summary>
 
+<p>Yarn中的任务将其进度和状态(包括counter)返回给应用管理器,客户端每秒(通过mapreduce.client.progressmonitor.pollinterval设置)向应用管理器请求进度更新,展示给用户</p>
 </details>
 
 <details><summary>作业完成</summary>
 
+<p>除了向应用管理器请求作业进度外,客户端每5秒都会通过调用waitForCompletion()来检查作业是否完成;时间间隔可以通过mapredue.client.completion.pollinterval来设置,作业完成之后,应用管理器和Container会清理工作状态</p>
+<p>作业的信息会被作业历史服务器存储以备之后用户检查</p>
 </details>
 
 <h3 id="yarn工作机制"><a href="#yarn工作机制" class="headerlink" title="yarn工作机制"></a>yarn工作机制</h3><ol>

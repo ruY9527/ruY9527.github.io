@@ -155,7 +155,7 @@
       }
       detectApple()
     })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/jvm_gc_info/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM垃圾回收</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-22T04:00:00.000Z" title="发表于 2021-12-22 12:00:00">2021-12-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:04:33.000Z" title="更新于 2025-12-31 13:04:33">2025-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JVM/">JVM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM垃圾回收"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/jvm_gc_info/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM垃圾回收</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-22T04:00:00.000Z" title="发表于 2021-12-22 12:00:00">2021-12-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:04:33.000Z" title="更新于 2025-12-31 13:04:33">2025-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JVM/">JVM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">9.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>28分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM垃圾回收"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>😀 这里写文章的前言：<br>JVM的垃圾回收机制</p>
 </blockquote>
 <h1 id="📝-简介"><a href="#📝-简介" class="headerlink" title="📝 简介"></a>📝 简介</h1><p>Java 的对象使用的是堆空间的内存, 方法的执行是栈帧的入栈出栈, 引用和局部变量可以随着入栈出栈直接清理, 但是引用对应所在堆空间的内存则不能通过出栈的结束而回收, 因为堆空间是线程共享的, 并不确定是否有其他线程引用了这块内存, 需要 GC 机制来进行自动的清理</p>
@@ -185,25 +185,36 @@
 <li>强引用</li>
 </ol>
 <ul>
-<li><strong>只要</strong>强引用关系存在**，垃圾回收器永远不会回收调掉被引用的对象**</li>
+<li><strong>只要</strong>强引用关系存在**，垃圾回收器永远不会回收调掉被引用的对象**<ul>
+<li>使用new一个新对象的方式来创建强引用</li>
+<li>Object obj &#x3D; new Object();</li>
+</ul>
+</li>
 </ul>
 <ol>
 <li>软引用</li>
 </ol>
 <ul>
-<li><strong>一些有用但是并非必须的对象，在系统发生OOM之前，将会对这些对象列进回收范围之中进行第二次回收</strong></li>
+<li><strong>一些有用但是并非必须的对象，在系统发生OOM之前，将会对这些对象列进回收范围之中进行第二次回收</strong><ol>
+<li>使用SoftReference类来实现软引用</li>
+<li>Object obj &#x3D; new Object();</li>
+<li>SoftReference<Object> softReference &#x3D; new SoftReference&lt;&gt;(obj);</li>
+</ol>
+</li>
 </ul>
 <ol>
 <li>弱引用</li>
 </ol>
 <ul>
-<li><strong>只能生存到下一次垃圾收集之前，当垃圾收集工作时，无论当前内存是否满足，都会被回收</strong></li>
+<li><p><strong>只能生存到下一次垃圾收集之前，当垃圾收集工作时，无论当前内存是否满足，都会被回收</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">使用 WeakReference 类来实现弱引用 </span><br><span class="line"><span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">WeakReference&lt;Object&gt; softReference = <span class="keyword">new</span> <span class="title class_">WeakReference</span>&lt;&gt;(obj);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <ol>
 <li>虚引用</li>
 </ol>
 <ul>
-<li><strong>幽灵引用或者幻影引用。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用 取得一个对象实例。 为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知 业界暂无使用场景， 可能被JVM团队内部用来跟踪JVM的垃圾回收活动</strong></li>
+<li><p><strong>幽灵引用或者幻影引用。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用 取得一个对象实例。 为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知 业界暂无使用场景， 可能被JVM团队内部用来跟踪JVM的垃圾回收活动</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">使用 PhantomReference 来实现虚引用</span><br><span class="line"><span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">PhantomReference&lt;Object&gt; softReference = <span class="keyword">new</span> <span class="title class_">PhantomReference</span>&lt;Object&gt;(obj);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="垃圾什么时候回收"><a href="#垃圾什么时候回收" class="headerlink" title="垃圾什么时候回收"></a>垃圾什么时候回收</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_gc_info/img-2.png" alt="JVM垃圾回收"></p>
 <p><strong>完成两次标记的会被回收</strong>.</p>
@@ -300,6 +311,12 @@
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_gc_info/img-9.png" alt="JVM垃圾回收"></p>
 <h1 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h1><details><summary>**在并发标记阶段使用的标记算法**</summary>
 
+<ol>
+<li>根一般是黑色的</li>
+<li>该对象的所有子类对象被扫过了就是黑色</li>
+<li>该对象的子类被扫了一部分，但是没有完全扫完，就是灰色</li>
+<li>扫描完成,剩下没被扫到的就是白色</li>
+</ol>
 </details>
 
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_gc_info/img-10.png" alt="JVM垃圾回收"></p>
@@ -308,6 +325,10 @@
 <h2 id="漏标问题"><a href="#漏标问题" class="headerlink" title="漏标问题"></a>漏标问题</h2><p>导致被引用的对象被当成垃圾误删除,严重bug</p>
 <details><summary>处理方式</summary>
 
+<ul>
+<li>增量更新: 当黑色的插入新的指向白色对象的引用关系时，就将这个新插入的引用记录下来，等待并发结束之后，再将这些记录过的关系引用中黑色对象为根，重新扫描一次。简化理解为：黑色对象一旦新插入了指向白色对象的引用后之后，它就变回了灰色对象</li>
+<li>原始快照: 当灰色对象要删除指向白色对象的引用关系时，要将这个删除的引用记录下来，在并发扫描结束之后，再将这些记录过的引用关系中的灰色对象为根，重新扫描一次，这样就能扫描到白色的对象，将白色的对象直接标记为黑色(目的是让这种对象在本轮gc清理中存活下来，待下一轮gc的时候，重新扫描，这个对象也有可能是浮动垃圾)</li>
+</ul>
 </details>
 
 <p>以上都是通过写屏障来实现的;所谓写屏障，其实就是在赋值操作前后，加一些处理(参考AOP)</p>
@@ -323,6 +344,11 @@
 
 <details><summary>**以Java HotSpot VM为例，其并发标记时对漏标的处理方案如下**</summary>
 
+<ul>
+<li>CMS: 写屏障 + 增量更新</li>
+<li>G1,Shenandoah: 写屏障 + 原始快照</li>
+<li>ZGC: 读屏障</li>
+</ul>
 </details>
 
 <p>SATB相对增量更新效率会高(当然STAB可能造成更多的浮动垃圾),因为不需要在重新标记阶段再次扫描被删除引用对象,而CMS增量引用的根对象会做深度描扫，G1因为很多对象都位于不同的region，CMS就一块老年代区域，重新深度描扫对象的话，G1的代价会比CMS高,所以G1选择SATB不深度扫描对象，只是简单标记，等到下一轮GC再深度描扫</p>
@@ -369,6 +395,11 @@
 <h3 id="并发可中断预处理"><a href="#并发可中断预处理" class="headerlink" title="并发可中断预处理"></a>并发可中断预处理</h3><p>新生代中对象的特点是“朝生夕灭”，这样如果Remark前执行一次Minor GC，大部分对象就会被回收。这样,老年代回收的时候,就会更少的扫描到年轻代的引用指向老年代, CMS就采用了这样的方式，在Remark前增加了一个可中断的并发预清理（CMS-concurrent-abortable-preclean），该阶段主要工作仍然是并发标记对象是否存活，只是这个过程可被中断。此阶段在Eden区使用超过2M时启动，当然2M是默认的阈值，可以通过参数修改。如果此阶段执行时等到了Minor GC，那么上述灰色对象将被回收，Reamark阶段需要扫描的对象就少</p>
 <details><summary>CMS 有两个参数：**CMSScheduleRemarkEdenSizeThreshold**、**CMSScheduleRemarkEdenPenetration**，默认值分别是2M、50%。两个参数组合起来的意思是预清理后，eden空间使用超过2M时启动可中断的并发预清理（CMS-concurrent-abortable-preclean），直到eden空间使用率达到50%时中断，进入remark阶段</summary>
 
+<p>总结: 并发可中断预处理,是为了在重新标记前,尽量多做一些事,因为这个期间是属于 “并发标记”,不影响用户线程的, 能多干点就多干点, 他的核心思想是,尽量做一次 minor GC,从而清理年轻代的对象,这样扫描老年代的时候,就会降低年轻代指向老年代的引用,从而更快重新标记,</p>
+<p>需要达到一些配置条件才能触发</p>
+<p>1:eden区使用超过了2MB(可配置)</p>
+<p>2:5秒(CMSMaxAbortablePrecleanTime 参数配置)内等不到minor GC就立马中断</p>
+<p>3:超过了5秒,还等不到,也可以配置一个参数(CMSScavengeBeforeRemark)强制进行minor GC</p>
 </details>
 
 <h3 id="重新标记"><a href="#重新标记" class="headerlink" title="重新标记"></a>重新标记</h3><p>重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短。主要用到了三色标记里的增量更新算法做重新标记</p>
@@ -399,22 +430,27 @@
 <h1 id="Full-GC触发条件"><a href="#Full-GC触发条件" class="headerlink" title="Full GC触发条件"></a>Full GC触发条件</h1><p>对于 Minor GC，其触发条件非常简单，当 Eden 区空间满时，就将触发一次 Minor GC。而 Full GC 则相对复杂,如果要触发fullGC,则</p>
 <details><summary>调用 System.gc()</summary>
 
+<p>此方法的调用是建议 JVM 进行 Full GC，虽然只是建议而非一定，但很多情况下它会触发 Full GC，从而增加 Full GC 的频率，也即增加了间歇性停顿的次数。因此强烈建议能不使用此方法就不要使用，让虚拟机自己去管理它 的内存。可通过 -XX:+ DisableExplicitGC 来禁止 RMI 调用 System.gc()</p>
 </details>
 
 <details><summary>老年代空间不足</summary>
 
+<p>老年代空间不足的常见场景为前文所讲的大对象直接进入老年代、长期存活的对象进入老年代等，当执行 Full GC 后空间仍然不足，则抛出 Java.lang.OutOfMemoryError。为避免以上原因引起的 Full GC，调优时应尽量做 到让对象在 Minor GC 阶段被回收、让对象在新生代多存活一段时间以及不要创建过大的对象及数组</p>
 </details>
 
 <details><summary>空间分配担保失败</summary>
 
+<p>使用复制算法的 Minor GC 需要老年代的内存空间作担保，如果出现了 HandlePromotionFailure 担保失败， 则会触发 Full GC</p>
 </details>
 
 <details><summary>JDK 1.7 及以前的永久代空间不足</summary>
 
+<p>在 JDK 1.7 及以前，HotSpot 虚拟机中的方法区是用永久代实现的，永久代中存放的为一些 class 的信息、常 量、静态变量等数据，当系统中要加载的类、反射的类和调用的方法较多时，永久代可能会被占满，在未配置为采用 CMS GC 的情况下也会执行 Full GC。如果经过 Full GC 仍然回收不了，那么 JVM 会抛出 java.lang.OutOfMemoryError，为避免以上原因引起的 Full GC，可采用的方法为增大永久代空间或转为使用 CMS GC</p>
 </details>
 
 <details><summary>Concurrent Mode Failure</summary>
 
+<p>执行 CMS GC 的过程中同时有对象要放入老年代，而此时老年代空间不足（有时候“空间不足”是 CMS GC 时当前的 浮动垃圾过多导致暂时性的空间不足触发 Full GC），便会报 Concurrent Mode Failure 错误，并触发 Full GC</p>
 </details>
 
 <h1 id="Minor-GC、Major-GC、FULL-GC、mixed-gc"><a href="#Minor-GC、Major-GC、FULL-GC、mixed-gc" class="headerlink" title="Minor GC、Major GC、FULL GC、mixed gc"></a><strong>Minor GC、Major GC、FULL GC、mixed gc</strong></h1><h2 id="1-Minor-GC"><a href="#1-Minor-GC" class="headerlink" title="1 Minor GC"></a>1 Minor GC</h2><p>在年轻代<code>Young space</code>(包括Eden区和Survivor区)中的垃圾回收称之为 Minor GC,Minor GC只会清理年轻代</p>
