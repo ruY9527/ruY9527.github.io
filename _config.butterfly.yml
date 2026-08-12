@@ -197,22 +197,27 @@ wordcount:
 translate:
   enable: false
 
-# 评论(默认关闭;如需启用,推荐 giscus,把 repo 信息填上即可)
+# 评论系统: Giscus(基于 GitHub Discussions,仓库 ruY9527/blog-comment)
 comments:
-  use:
+  use: Giscus
   text: true
-  lazyload: false
+  lazyload: true      # 滚动到评论区再加载
   count: false
   card_post_count: false
 
 giscus:
-  repo:
-  repo_id:
-  category_id:
+  repo: ruY9527/blog-comment
+  repo_id: R_kgDOJnxxPw
+  category_id: DIC_kwDOJnxxP84CWwPJ
   theme:
     light: light
     dark: dark
   option:
+    data-category: Show and tell
+    data-strict: '0'
+    data-emit-metadata: '0'
+    data-input-position: bottom
+    data-lang: zh-CN
 
 # 分享
 sharejs:

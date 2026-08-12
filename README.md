@@ -67,7 +67,7 @@ permalink: article/my_slug/
 └── .github/workflows/       # 部署/构建检查 workflow
 ```
 
-## 开启评论(可选)
+## 评论系统
 
-主题已预置 giscus 配置,到 https://giscus.app 按指引拿到 `repo_id` / `category_id`,
-填入 `_config.butterfly.yml` 的 `giscus:` 段,并把 `comments.use` 设为 `Giscus` 即可。
+已启用 **Giscus**(基于 GitHub Discussions,评论数据存放在 [ruY9527/blog-comment](https://github.com/ruY9527/blog-comment) 仓库)。
+配置在 `_config.butterfly.yml` 的 `comments` / `giscus` 段,滚动到文章底部自动加载。
