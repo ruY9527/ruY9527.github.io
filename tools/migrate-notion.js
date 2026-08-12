@@ -57,6 +57,15 @@ async function fetchAllBlocks(pageId) {
 }
 
 /* ---------------- 富文本 ---------------- */
+// eoi(外部对象嵌入/链接预览)的 URL 无法通过公开 API 恢复(cross-cell 限制),
+// 人工确认后登记在此,重新迁移时保持正确:
+const EOI_MAP = {
+  'f9ee03c7-21b3-45e9-a1be-1e6370244d18': ['JSqlParser', 'https://github.com/JSQLParser/JSqlParser'],
+  '001a2570-aee7-4da8-af1b-08fa6d9494ab': ['grammars-v4', 'https://github.com/antlr/grammars-v4'],
+  '88eb3949-bb1d-4b7e-9a5b-b9adbc920678': ['datahub-project/datahub', 'https://github.com/datahub-project/datahub'],
+  // '5b8072a3-59c1-4953-9312-106f95678cee': kafka_problems2 处理方案的参考文章,URL 待作者补充
+  // '5396b1f6-be07-4292-bafc-7ad6165acbd1': altrl4one 参考文章列表中的一篇,URL 待作者补充
+};
 function escMd(t) {
   return t.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\*/g, '\\*').replace(/\[/g, '\\[').replace(/\]/g, '\\]');
 }
@@ -77,7 +86,11 @@ function richText(arr) {
       else if (f[0] === 's') strike = true;
       else if (f[0] === 'e') { out += `$${f[1] || ''}$`; text = null; }
       else if (f[0] === 'd') { text = f[1]?.start_date || text; }
-      else if (f[0] === 'eoi') { out += '[嵌入对象]'; text = null; }
+      else if (f[0] === 'eoi') {
+        const m = EOI_MAP[f[1]];
+        out += m ? `[${m[0]}](${m[1]})` : '⚠️[此处原为Notion外部链接预览,URL待补充]';
+        text = null;
+      }
       else if (f[0] === 'p') { text = '[引用页面]'; }
       else if (f[0] === 'u') { text = '@用户'; }
     }
