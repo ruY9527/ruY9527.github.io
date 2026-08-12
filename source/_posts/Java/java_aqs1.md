@@ -50,12 +50,12 @@ CLH锁其实就是一种基于队列(具体为单向链表)排队的自旋锁，
 
 |   |   |
 | --- | --- |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| 方法名称 | 描述 |
+| boolean tryAcquire(int arg) | 独占式获取同步状态，成功返回true，失败返回false |
+| boolean tryRelease(int arg) | 独占式释放同步状态，成功返回true，失败返回false |
+| int tryAcquireShared(int arg) | 共享式获取同步状态，获取成功则返回值>=0 |
+| boolean tryReleaseShared(int arg) | 共享式释放同步状态，成功返回true，失败返回false |
+| boolean isHeldExclusively() | 判断同步器是否在独占模式下被占用，一般用来表示同步器是否被当前线程占用 |
 
 ## 重写模板方法
 
@@ -63,15 +63,15 @@ CLH锁其实就是一种基于队列(具体为单向链表)排队的自旋锁，
 
 |   |   |
 | --- | --- |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| 方法名称 | 描述 |
+| void acquire(int arg) | 独占式获取同步状态，该方法会调用子类重写的tryAcquire(int arg)，如果tryAcquire返回true则该方法直接返回，否则先将当前线程加入同步队列的尾部，然后阻塞当前线程 |
+| void acquireInterruptibly(int arg) | 当线程获取同步状态失败被阻塞后，可以响应中断，收到中断后将会取消获取同步状态 |
+| boolean tryAcquireNanos(int arg, long nanosTimeout) | 在acquireInterruptibly的基础上加了超时限制，如果在超时时间内获取到同步状态返回true，否则返回false |
+| boolean release(int arg) | 独占式释放同步状态，该方法会在释放同步状态后将第一个节点（对应刚刚释放同步状态的线程）的后继节点对应的线程唤醒 |
+| void acquireShared(int arg) | 共享式获取同步状态，该方法会调用子类重写的tryAcquireShared(int arg)，如果tryAcquireShared返回true则该方法直接返回，否则先将当前线程加入同步队列的尾部，然后阻塞当前线程 |
+| void acquireSharedInterruptibly(int arg) | 当线程获取同步状态失败被阻塞后，可以响应中断，收到中断后将会取消获取同步状态 |
+| boolean tryAcquireSharedNanos(int arg, long nanosTimeout) | 在acquireSharedInterruptibly的基础上加了超时限制，如果在超时时间内获取到同步状态返回true，否则返回false |
+| boolean releaseShared(int arg) | 共享式的释放同步状态 |
 
 ## State
 

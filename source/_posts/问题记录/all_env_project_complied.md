@@ -100,8 +100,8 @@ mvn install:install-file -DgroupId=com.pivotal -DartifactId=greenplum-jdbc -Dver
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
+| 名字 | 作用 | 地址 |
+|  | python爬虫学习资料 | [https://vip.fxxkpython.com/?p=4699](https://vip.fxxkpython.com/?p=4699) |
 |  |  |  |
 
 # 📝 资源记录相关(主要学习资源记录)
@@ -110,20 +110,20 @@ mvn install:install-file -DgroupId=com.pivotal -DartifactId=greenplum-jdbc -Dver
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 名字 | 作用 | 网址 |
+| 内容生成 |  | [writesonic.com](http://writesonic.com/) |
+| 针对网络的研究操作系统 |  | [nette.io](http://nette.io/) |
+| 生成病毒式推文和话题串 |  | [postwise.ai](http://postwise.ai/) |
+| YouTube视频编辑器 |  | [FlexClip.com](http://flexclip.com/) |
+| 文本转视频 |  | [synthesia.io](http://synthesia.io/) |
+| 设计工具 |  | [designer.microsoft.com](http://designer.microsoft.com/) |
 
 ## AI绘画
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
+| 名字 | 作用 | 网址 |
+| 光影文字 | 光影文字 | [https://mp.weixin.qq.com/s/zbQCwOHsMS4GmMLJJIU_1A](https://mp.weixin.qq.com/s/zbQCwOHsMS4GmMLJJIU_1A) |
 |  |  |  |
 |  |  |  |
 
@@ -131,8 +131,8 @@ mvn install:install-file -DgroupId=com.pivotal -DartifactId=greenplum-jdbc -Dver
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
+| 名字 | 作用 | 网址 |
+| 区块链学习 |  | [https://learnweb3.io/](https://learnweb3.io/) |
 |  |  |  |
 |  |  |  |
 
@@ -140,31 +140,31 @@ mvn install:install-file -DgroupId=com.pivotal -DartifactId=greenplum-jdbc -Dver
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 插件名称 | 插件作用 | 插件备注 |
+| **Simple Object Copy** |  | 一键生成 dto,vo 等插件 |
+| **Maven Helper** |  | 查看maven依赖树情况 |
+| **EasyCode** |  | 一键生成逆向工程 |
+| **Iedis** |  | Redis连接插件 |
+| **Lombok** |  | 方法自动生成 |
+| **Jrebel** |  | 热部署相关的插件 |
+| **Alibaba Java Coding Guidelines** |  | 阿里巴巴代码检测规范 |
+| **VisualVM Launcher** |  | 性能监控的插件 |
+| **CodeGlance** |  | 左侧窗口的上下滑动框 |
+| **Material Theme UI** |  | IDEA的UI框架 |
+| **stackoverflow** |  | 链接到   stackoverflow 检查问题 |
+| **Codota** |  | 好 |
+| **jclasslib bytecode viewer** |  | 字节码编译 |
+| **PlantUML** |  | 对象类设计 |
+| **Stack trace to UML** |  | 调用链图 |
+| **Git Commit Template** |  | git提交规范代码 |
 |  |  |  |
 
 # 📝 资讯资源
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
+| 名字 | 作用 | 网址 |
+| 新闻资源 | 国外的新闻资源 | [https://mgreader.com/](https://mgreader.com/) |
 |  |  |  |
 |  |  |  |
 |  |  |  |
@@ -173,17 +173,17 @@ mvn install:install-file -DgroupId=com.pivotal -DartifactId=greenplum-jdbc -Dver
 
 |   |   |   |   |
 | --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 名字 | 状态 | 总结 |  |
+| 诈骗王 |  |  |  |
+| 富豪谷底求翻身 |  |  |  |
+| 货币崛起 |  |  |  |
+| 但是还有书籍 |  |  |  |
+| 宇宙 |  |  |  |
+| 急诊室的故事 |  |  |  |
+| 心智斗争 |  |  |  |
+| 女人 |  |  |  |
+| 解码比尔盖茨 |  |  |  |
+| 绿色星球 |  |  |  |
 
 # 🤗 总结归纳
 

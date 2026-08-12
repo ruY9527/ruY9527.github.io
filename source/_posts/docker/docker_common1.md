@@ -81,15 +81,15 @@ NameSpace的工作方式通过一组资源和进程设置相同的namesapce而�
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| Namespace 名称 | 作用 | 内核版本 |
+| Mount（mnt） | 隔离挂载点 | 2.4.19 |
+| Process ID (pid) | 隔离进程 ID | 2.6.24 |
+| Network (net) | 隔离网络设备，端口号等 | 2.6.29 |
+| Interprocess Communication (ipc) | 隔离 System V IPC 和 POSIX message queues | 2.6.19 |
+| UTS Namespace(uts) | 隔离主机名和域名 | 2.6.19 |
+| User Namespace (user) | 隔离用户和用户组 | 3.8 |
+| Control group (cgroup) Namespace | 隔离 Cgroups 根目录 | 4.6 |
+| Time Namespace | 隔离系统时间 | 5.6 |
 
 虽然 Linux 内核提供了8种 Namespace，但是最新版本的 Docker 只使用了其中的前6 种，分别为Mount Namespace、PID Namespace、Net Namespace、IPC Namespace、UTS Namespace、User Namespac
 

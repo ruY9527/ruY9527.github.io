@@ -77,7 +77,11 @@ function richText(arr) {
       else if (f[0] === 's') strike = true;
       else if (f[0] === 'e') { out += `$${f[1] || ''}$`; text = null; }
       else if (f[0] === 'd') { text = f[1]?.start_date || text; }
+      else if (f[0] === 'eoi') { out += '[嵌入对象]'; text = null; }
+      else if (f[0] === 'p') { text = '[引用页面]'; }
+      else if (f[0] === 'u') { text = '@用户'; }
     }
+    if (text === '‣') continue; // 未识别的占位符,丢弃
     if (text === null) continue;
     let t = isCode ? '`' + text.replace(/`/g, '\\`') + '`' : escMd(text);
     if (!isCode) {
@@ -227,7 +231,8 @@ function renderBlocks(ids, blocks, ctx, depth = 0) {
         break;
       }
       case 'table': {
-        const cols = (b.format?.table_block_column_order || []).map(c => c.property);
+        // column_order 可能是字符串数组(新版API)或对象数组(旧版 {property})
+        const cols = (b.format?.table_block_column_order || []).map(c => (typeof c === 'string' ? c : c.property));
         const hasHeader = !!b.format?.table_block_column_header;
         const rows = (b.content || []).map(rid => {
           const r = blocks[rid];
@@ -331,9 +336,11 @@ function frontMatter(p, ctx) {
     try {
       const dir = pg.slug === 'links' ? 'links' : (pg.slug === 'message' || pg.slug === 'about') ? 'about' : pg.slug;
       const { out } = await convertOne(pg, 0, 0);
+      // 单页 permalink 用目录形式,不走 article/
+      const fixed = out.replace(`permalink: article/${slugify(pg)}/`, `permalink: ${dir}/`);
       const target = path.join(ROOT, 'source', dir);
       fs.mkdirSync(target, { recursive: true });
-      fs.writeFileSync(path.join(target, 'index.md'), out, 'utf8');
+      fs.writeFileSync(path.join(target, 'index.md'), fixed, 'utf8');
       console.log(`单页 ✓ ${pg.title} → source/${dir}/index.md`);
     } catch (e) { console.error(`单页 ✗ ${pg.title}: ${e.message}`); }
   }

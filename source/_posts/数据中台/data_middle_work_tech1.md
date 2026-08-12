@@ -96,7 +96,7 @@ tags:
 # 元数据管理
 
 - Apache Atlas:统一元数据管理平台
-- datahub\[‣\]
+- datahub\[[嵌入对象]\]
 
 # 数据管理和数据权限
 

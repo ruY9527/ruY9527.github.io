@@ -12,25 +12,25 @@ permalink: article/cdh6_3_2_create1/
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 端口号 | 组件 | 备注 |
+| 7180 | CDH web UI |  |
+| 9870 | HDFS web UI |  |
+| 8088 | Yarn web UI |  |
+| 19888 | Historyserver web UI |  |
+| 8080 |  |  |
+| 8888 | Hue（未优化） |  |
+| 8889 | Hue（优化） |  |
+| 3306 | MySQL |  |
+| 6379 | Redis |  |
+| 9092 | kafka |  |
+| 2181 | zk |  |
+| 4040 | Spark |  |
+| 18088 | Spark |  |
+| 10000 | Hiveserve2 |  |
+| 10002 | Hive |  |
+| 11000 | Oozie |  |
+| 51000 | Sentry |  |
+| 8020 | HDFS |  |
 |  |  |  |
 
 # 修改主机hosts配置
@@ -400,16 +400,16 @@ mv mysql-connector-java-5.1.46-bin.jar mysql-connector-java.jar
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| Service | Database | User |
+| Cloudera Manager Server | scm | scm |
+| Activity Monitor | amon | amon |
+| Reports Manager | rman | rman |
+| Hue | hue | hue |
+| Hive Metastore Server | metastore | hive |
+| Sentry Server | sentry | sentry |
+| ~~Cloudera Navigator Audit Server~~ | ~~nav~~ | ~~nav~~ |
+| ~~Cloudera Navigator Metadata Server~~ | ~~navms~~ | ~~navms~~ |
+| Oozie | oozie | oozie |
 
 ```java
 mysql -u root -p

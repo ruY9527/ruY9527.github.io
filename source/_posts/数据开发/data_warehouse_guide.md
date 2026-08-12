@@ -23,59 +23,59 @@ execl表头记录所有表的信息，类似mysql的索引
 
 |   |   |   |   |   |
 | --- | --- | --- | --- | --- |
-|  |  |  |  |  |
-|  |  |  |  |  |
+| 序号 | 层次类别 | 表名 | 中文名称 | 备注 |
+| 1 | ods | user_list | 用户信息 | 用户信息 |
 
 ## 单个表记录(单个execl页)
 
 |   |   |   |   |
 | --- | --- | --- | --- |
+| 表英文名 | dwd_ls_md_item_store_df | 设计人 | 鲍洋 |
+| 表备注 | 商品门店级别 |  |  |
+| 备注 | 每天做快照，根据后期需求，再扩展计算指标 | ETL策略 | 日全量 |
+|  |  |  |  |
+| 源表基本信息 |  |  |  |
+| 表中文名称 | 表英文名称 | 别名 | 数据总量 |
+| 商品所有基本信息 | ods_erp.o_bas_club_item | ci | 835943 |
+| 商品所有基本信息1 | ods_erp.o_bas_club_item1 | ci1 | 835943 |
+|  |  |  |  |
+| 表关联关系描述 |  |  |  |
+| 源表别名1 | 关联类型 | 源表别名2 | 备注 |
+| ci | inner join | ci1 |  |
 |  |  |  |  |
 |  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 字段映射描述(组1) |  |  |  |
+| 目标表 | 源表 | 规则 |  |
+| 列名 | 字段类型 | 列描述 | 列名 |
+| club_nbr | bigint | 门店号 | ci.club_nbr |
+| item_nbr | bigint | 商品号 | ci.item_nbr |
+| item_on_shelf_date | date | 上架日期 | ci.item_on_shelf_date |
+| item_off_shelf_dt | date | 下架日期 | ci.item_off_shelf_dt |
+| markdown_status_cd | bigint |  | ci.markdown_status_cd |
+| item_status_code | string | 商品状态 | ci.item_status_code |
+| unit_retail_amt | decimal(25,10) | 单位零售金额 | ci.unit_retail_amt |
+| link_item_nbr | bigint | 链接上号号 | ci.link_item_nbr |
+| last_change_ts | timestamp | 最近变更时间 | ci.last_change_ts |
+| last_change_userid | string | 最近变更人 | ci.last_change_userid |
+| non_mbr_upchrg_ind | string |  | ci.non_mbr_upchrg_ind |
+| unit_retail_chg_dt | date |  | ci.unit_retail_chg_dt |
+| last_markdown_ind | string |  | ci.last_markdown_ind |
+| whpk_sell_amt | decimal(25,10) |  | ci.whpk_sell_amt |
+| vnpk_cost_amt | decimal(25,10) |  | ci.vnpk_cost_amt |
+| last_update_pgm_id | string |  | ci1.last_update_pgm_id |
+| item_create_dt | date |  | ci.item_create_dt |
+| cancel_whn_out_dt | date |  | ci.cancel_whn_out_dt |
+| cncl_unit_rtl_amt | decimal(25,10) |  | ci.cncl_unit_rtl_amt |
+| lead_time_qty | smallint |  | ci.lead_time_qty |
+| prompt_price_ind | string | 促销价 | ci.prompt_price_ind |
+| lease_sales_pct | decimal(25,10) |  | ci.lease_sales_pct |
+| lease_eff_date | date |  | ci.lease_eff_date |
+| lease_exp_date | date |  | ci.lease_exp_date |
+| last_sold_date | date |  | ci.last_sold_date |
+| lease_dflt_sls_pct | decimal(25,10) |  | ci.lease_dflt_sls_pct |
+| itemfile_source_nm | string |  | ci.itemfile_source_nm |
+| max_retail_amt | decimal(25,10) | 最大零售金额 | ci.max_retail_amt |
+| whpk_sell_chg_rsn_cd | bigint |  | ci.whpk_sell_chg_rsn_cd |
 
 # ODS作业规范(Execl文件)
 
@@ -83,14 +83,14 @@ execl表头记录所有表的信息，类似mysql的索引
 
 |   |   |   |   |
 | --- | --- | --- | --- |
+| 基本信息 |  |  |  |
+| 制定人 | 鲍某 | 编写时间 | 2022/9/28 |
+| 审核人 |  | 审核时间 |  |
+| 版本 | V1.0 |  |  |
 |  |  |  |  |
 |  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 文档修订历史 |  |  |  |
+| 序号 | 版本号 | 修订章节 | 修订原因 |
 |  |  |  |  |
 |  |  |  |  |
 |  |  |  |  |
@@ -102,17 +102,17 @@ execl表头记录所有表的信息，类似mysql的索引
 
 |   |   |   |   |   |
 | --- | --- | --- | --- | --- |
-|  |  |  |  |  |
-|  |  |  |  |  |
+| 版本时间 | 工程 | 调度数 | >=100W数量表 | 备注 |
+| 2022/9/1 | ods_user | 2 | 0 |  |
 |  |  |  |  |  |
 
 ## ods作业梳理
 
 |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| TASK | 属主 | SRC_TBL | TGT_DB | TGT_TBL | 抽取方式 | 上线时间 | 调度频率 | 调度时间 | 更新时间 | 平台 | 当前状态 | 数据量 | 备注 |
+| 目标表名 | userdb | 源表名 | ods_userdb | o_\[源表名\]_di | 增量 | 2022/9/1 | 每天一次 | 每天02:01 |  | dolphinscheduler | 激活 | 1379 |  |
+| 目标表名 | userdb | 源表名 | ods_userdb | o_\[源表名\]_df | 全量 | 2022/9/1 | 每天一次 | 每天02:01 |  | dolphinscheduler | 激活 | 1379 |  |
 
 # 数仓命名规范
 
@@ -120,12 +120,12 @@ execl表头记录所有表的信息，类似mysql的索引
 
 |   |   |   |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+|  | 正式库 | 临时库 |
+|  | ods_\[source database name \] | ods_\[source database name \]_tmp |
+|  | dwd_db | dwd_db_tmp |
+|  | dws_db | dws_db_tmp |
+|  | ads_db | ads_db_tmp |
+|  | dim_db | dim_db_tmp |
 
 ## 表命名规范
 

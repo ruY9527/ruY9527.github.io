@@ -42,7 +42,7 @@ description: "kafka消费者消费消息记录1"
 public Map<String, Object> consumerConfigs(String groupId) {    Map<String, Object> props = new HashMap<>(16);    props.put(ConsumerConfig.GROUP_ID_CONFIG,groupId);    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);    props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 30000);    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");     props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG,100);    props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,31457280);    props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG,300000);    return props;}
 ```
 
-处理方案: ‣
+处理方案: [嵌入对象]
 
 可以看着别人的配置跟着配置下,但是最好要自己理解下你配置这些参数的值大小,代表着什么意思. 因为你获取这些数据的多少,是直接与你的业务代码和服务器内存进行挂钩的.
 

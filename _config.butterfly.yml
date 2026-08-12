@@ -28,15 +28,16 @@ code_word_wrap: false
 social:
   fab fa-github: https://github.com/ruY9527 || "var(--btn-color)"
 
-favicon: /img/favicon.png
+favicon: https://avatars.githubusercontent.com/ruY9527
 
 # 头像(侧边栏)
 avatar:
   img: https://avatars.githubusercontent.com/ruY9527
   effect: true
 
-# 首页顶部大图(使用主题默认图)
-index_top_img_height:
+# 首页顶部大图(本地艺术图,限定高度不再全屏)
+index_img: /img/top-index.jpg
+index_top_img_height: 420px
 disable_top_img: false
 default_top_img:
 default_cover:

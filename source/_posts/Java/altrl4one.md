@@ -26,10 +26,10 @@ cover: /images/posts/altrl4one/img-1.png
 
 |   |   |   |   |
 | --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 项目名称 | 适合的数据库 | 项目地址 | 个人观点 |
+| JSqlParser | **RDBMS** | [嵌入对象] | 目前只适合关系型的数据库，对于大数据很多领域的数据库目前还不是特别支持 |
+| calcite | Cassandra、Druid、Elasticsearch、MongoDB、Kafka,FlinkSQL等 | [https://github.com/apache/calcite/tree/main](https://github.com/apache/calcite/tree/main) | 后续再补 |
+| antlr | 可以借助 grammars-v4 这个项目提供,可以解析很多数据库以及编程语言等都可以解析的 | antlr4项目:[https://github.com/antlr/antlr4](https://github.com/antlr/antlr4)<br><br>语法校验项目模块： [嵌入对象] | 社区构建比较完善,比如Spark,Hive,Iceberg等都有.g4文件来满足antlr4对SQL的解析,并且你也可以借助开源项目提供的g4来解析 |
 
 类似阿里开源的druid这种也是有解析SQL的功能的，但是稍微看了下源码，其底层好像也是有利用到antlr
 
@@ -481,6 +481,6 @@ public static void main(String[] args) {
 # 📎 参考文章
 
 - [https://makeyourchoice.cn/archives/591/](https://makeyourchoice.cn/archives/591/)
-- ‣
+- [嵌入对象]
 
 > 💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~

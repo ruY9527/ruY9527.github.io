@@ -102,9 +102,9 @@ if __name__ == "__main__":
 
 |   |   |
 | --- | --- |
-|  |  |
-|  |  |
-|  |  |
+| **Property** | **Description** |
+| write.metadata.delete-after-commit.enabled | 每次表提交后是否删除旧的元数据文件 |
+| write.metadata.previous-versions-max | 要保留旧的元数据文件数量 |
 
 `CREATE TABLE ${CataLog名称}.${库名}.${表名} (  id bigint, 
   name string) using icebergPARTITIONED BY (  loc string) TBLPROPERTIES (    'write.metadata.delete-after-commit.enabled'= true,	'write.metadata.previous-versions-max' = 3)`

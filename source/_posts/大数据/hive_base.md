@@ -64,20 +64,20 @@ Hive 3.x版本之上是可以支持acid的
 
 |   |   |   |   |
 | --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 类型 | 比如 | 备注 | 存储例子 |
+| TINYINT |  |  |  |
+| SMALINT |  |  |  |
+| INT |  |  |  |
+| BIGINT |  |  |  |
+| BOOLEAN |  |  |  |
+| FLOAT |  |  |  |
+| DOUBLE |  |  |  |
+| STRING |  |  |  |
+| TIMESTAMP |  |  |  |
+| BINARY |  |  |  |
+| STRUCT | struct<street:string, city:string> | 和c语言中的struct类似，都可以通过“点”符号访问元素内容 | 如果某个列的数据类型是STRUCT{first STRING, last STRING},那么第1个元素可以通过字段.first来引用 |
+| MAP | map<string, int> | MAP是一组键-值对元组集合，使用数组表示法可以访问数据 | 如果某个列的数据类型是MAP，其中键->值对是’first’->’John’和’last’->’Doe’，那么可以通过字段名\[‘last’\]获取最后一个元素 |
+| ARRAY | array<string> | 数组是一组具有相同类型和名称的变量的集合;这些变量称为数组的元素，每个数组元素都有一个编号，编号从零开始 | 数组值为\[‘John’, ‘Doe’\]，那么第2个元素可以通过数组名\[1\]进行引用 |
 
 ## 类型转换
 
@@ -156,13 +156,13 @@ ALTER TABLE table_name ADD|REPLACE COLUMNS (col_name data_type [COMMENT col_comm
 
 |   |   |
 | --- | --- |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| 建表字段 | 属性意义 |
+| LOCATION | 在建表的同时可以指定一个指向实际数据的路径 |
+| COMMENT | 为表和列添加注释 |
+| PARTITIONED BY | 创建分区表 |
+| CLUSTERED BY | 创建分桶表 |
+| SORTED BY | 对桶中的一个或多个列另外排序 |
+| STORE AS | 指定存储文件类型 |
 
 ### 删除表
 
@@ -190,13 +190,13 @@ location '/input/student';
 
 |   |   |
 | --- | --- |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| 属性 | 属性含义 |
+| load data | 加载数据 |
+| local | 表示从本地加载数据到hive表，否则是从HDFS加载数据到Hive表 |
+| Inpath | 加载数据的路径 |
+| Overwrite | 表示覆盖表中已有数据,否则表示追加 |
+| Into table | 加载数据到那张表中 |
+| Partition | 加载数据到指定的分区 |
 
 ## 分区表
 
@@ -270,17 +270,17 @@ desc function 函数名: 显示自带的函数的用法
 
 desc function extended 函数名: 展开详细说明
 
-|  |  |  |
+| 作用 | 函数 | 功能 |
 | --- | --- | --- |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 空字段赋值-NVL（防止空字段参与计算） | NVL(value,default_value) | 如果value为NULL，则NVL函数返回default_value的值，否则返回value的值<br>如果两个参数都为NULL ，则返回NULL |
+| CASE WHEN THEN ELSE END | CASE a WHEN b THEN c \[WHEN d THEN e\]\* \[ELSE f\] END | 根据不同的数据,返回不同的值<br>当a=b时，返回c；当a=d时，返回d；当a=e时，放回e；其他情况返回f |
+| 行转列（组函数） | CONCAT(string A/col, string B/col…) | 返回输入字符串连接后的结果，支持任意个输入字符串 |
+| 行转列（组函数） | CONCAT_WS(separator, str1, str2,...) | 指定字符separator，连接str<br>sparator: 分割符<br>分割符将被加到被连接的字符串之间 |
+| 行转列（组函数） | COLLECT_SET(col) | 函数只接受基本数据类型;<br>它的主要作用是将某字段的值进行去重汇总,产生array类型字段 |
+| 行转列（组函数） | COLLECT_LIST(col) | 函数值接受基本数据类型;<br>它的主要作用是将某字段的值进行不去重汇总,产生array类型字段 |
+| 列转行 | EXPLODE(col) | 将hive表的一列中复杂的array或者map结构拆分成多行;<br>会出现改行与其它字段行数不匹配报错<br>因此<br>必须和lateral view连用 |
+| 列转行 | SPLIT(string str, string regex) | 按照regex字符串分割str，会返回分割后的字符串数组 |
+| 列转行 | LATERAL VIEW | 用于和split,explode等UDF一起使用,它能够将一列数据拆成多行数据,在次基础上可以对拆分后的数据进行聚合<br>lateral view首先为原始表的每行调用UDTF,UDTF会报一行拆分成一行或者多行,lateral view再把结果组合,产生一个支持别名表的虚拟表 |
 
 ## 窗口函数（开窗函数）
 
