@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringBoot动态添加接口 | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="背景最近看了公司的产品,有一个这样的动态,就是根据input输入的内容,进行动态接口的添加. 比如 我在没有添加之前,访问 http:&#x2F;&#x2F;localhost:8080&#x2F;test 该地址是404, 于是通过input的输入创建,就相当于动态添加了一个接口,于是就可以访问了. 实现的方式有很多种, 具体的想要的效果肯定是需要根据自己的业务角度来. 实现思路这里是说下个人的实现思路 :  方案一 : 先">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot动态添加接口">
+<meta property="og:url" content="https://ruy9527.github.io/2021/11/03/SpringBoot%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0%E6%8E%A5%E5%8F%A3/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="背景最近看了公司的产品,有一个这样的动态,就是根据input输入的内容,进行动态接口的添加. 比如 我在没有添加之前,访问 http:&#x2F;&#x2F;localhost:8080&#x2F;test 该地址是404, 于是通过input的输入创建,就相当于动态添加了一个接口,于是就可以访问了. 实现的方式有很多种, 具体的想要的效果肯定是需要根据自己的业务角度来. 实现思路这里是说下个人的实现思路 :  方案一 : 先">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/ruY9527">
+<meta property="article:published_time" content="2021-11-03T16:17:24.000Z">
+<meta property="article:modified_time" content="2026-08-12T04:38:02.949Z">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="springBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/ruY9527"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/2021/11/03/SpringBoot%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0%E6%8E%A5%E5%8F%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringBoot动态添加接口',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-08-12 12:38:02'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringBoot动态添加接口</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-03T16:17:24.000Z" title="发表于 2021-11-04 00:17:24">2021-11-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-12T04:38:02.949Z" title="更新于 2026-08-12 12:38:02">2026-08-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/springBoot/">springBoot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringBoot动态添加接口"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近看了公司的产品,有一个这样的动态,就是根据input输入的内容,进行动态接口的添加.</p>
+<p>比如 我在没有添加之前,访问 <a target="_blank" rel="noopener" href="http://localhost:8080/test">http://localhost:8080/test</a> 该地址是404, 于是通过input的输入创建,就相当于动态添加了一个接口,于是就可以访问了.</p>
+<p>实现的方式有很多种, 具体的想要的效果肯定是需要根据自己的业务角度来.</p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>这里是说下个人的实现思路 :</p>
+<ul>
+<li>方案一 : 先定义好类,然后使用反射根据定义的类,创建好一个对象出来,然后将这个对象给注入到Spring容器中来,这里不仅仅是注入进来这么简单,还是需要经过 MVC(也就是Controller等注解的匹配操作)来实现</li>
+<li>方案二 : 基于请求404的拦截来现实. 比如你新添加的接口访问肯定是404,于是我们可以定义一个拦截,然后获取出请求的路径,根据提前定好的一些设置,进行逻辑的处理.</li>
+</ul>
+<p>这里肯定还会有很多好的实现思路,并且基于每个框架都是不一样的,这里更多的是基于 SpringBoot框架来实现这个思路的.</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="基于反射创建bean注入代码实现"><a href="#基于反射创建bean注入代码实现" class="headerlink" title="基于反射创建bean注入代码实现"></a>基于反射创建bean注入代码实现</h3><p>定义一个类的模板</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">String</span> <span class="variable">templateValue</span> <span class="operator">=</span> <span class="string">&quot;import org.springframework.web.bind.annotation.GetMapping;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;import org.springframework.web.bind.annotation.RequestMapping;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;import org.springframework.web.bind.annotation.RestController;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;@RestController\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;@RequestMapping(\&quot;/test\&quot;)\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;public class TestController &#123;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;    @GetMapping(\&quot;/test\&quot;)\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;    public String test()&#123;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;        return \&quot;测试Test接口\&quot;;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;    &#125;\n&quot;</span> +</span><br><span class="line">        <span class="string">&quot;&#125;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>提供一个接口来反射创建对象并且注入到spring容器中来:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/create&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createTemplate</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        Map&lt;String, <span class="type">byte</span>[]&gt; bytecode = DynamicLoader.compile(<span class="string">&quot;TestController.java&quot;</span>, templateValue);</span><br><span class="line">        <span class="type">MemoryClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MemoryClassLoader</span>(bytecode);</span><br><span class="line">        <span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> classLoader.loadClass(<span class="string">&quot;TestController&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">object</span> <span class="operator">=</span> clazz.newInstance();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注入 bean 容器的代码 : 容器中是存在这个 bean 对象的,但是Controller却没有访问到.</span></span><br><span class="line">        <span class="type">BeanDefinitionBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> BeanDefinitionBuilder.genericBeanDefinition(object.getClass());</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> springUtils.getContext();</span><br><span class="line">        <span class="type">DefaultListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> (DefaultListableBeanFactory) context.getBeanFactory();</span><br><span class="line">        beanFactory.registerBeanDefinition(<span class="string">&quot;testController&quot;</span>,builder.getBeanDefinition());</span><br><span class="line"></span><br><span class="line">        <span class="type">RequestMappingHandlerMapping</span> <span class="variable">mappingHandlerMapping</span> <span class="operator">=</span> context.getBean(RequestMappingHandlerMapping.class);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">oj</span> <span class="operator">=</span> context.getBean(<span class="string">&quot;testController&quot;</span>);</span><br><span class="line">        Map&lt;Method, RequestMappingInfo&gt; methods = MethodIntrospector.selectMethods(oj.getClass(),(MethodIntrospector.MetadataLookup&lt;RequestMappingInfo&gt;) method -&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span>&#123;</span><br><span class="line">                <span class="type">RequestMapping</span> <span class="variable">requestMapping</span> <span class="operator">=</span> AnnotatedElementUtils.findMergedAnnotation(method, RequestMapping.class);</span><br><span class="line">                RequestMappingInfo.<span class="type">Builder</span> <span class="variable">mappping</span> <span class="operator">=</span> RequestMappingInfo.paths(requestMapping.path())</span><br><span class="line">                                  .methods(requestMapping.method())</span><br><span class="line">                                  .params(requestMapping.params())</span><br><span class="line">                                  .headers(requestMapping.headers())</span><br><span class="line">                                  .consumes(requestMapping.consumes())</span><br><span class="line">                                  .produces(requestMapping.produces())</span><br><span class="line">                                  .mappingName(requestMapping.name());</span><br><span class="line">                <span class="keyword">return</span> mappping.build();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="type">Method</span> <span class="variable">rmhmMethod</span> <span class="operator">=</span> mappingHandlerMapping.getClass()</span><br><span class="line">                            .getDeclaredMethod(<span class="string">&quot;registerHandlerMethod&quot;</span>,<span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;Object.class, Method.class, Object.class&#125;);</span><br><span class="line"></span><br><span class="line">        rmhmMethod.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        methods.forEach((method,mapping) -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span>&#123;</span><br><span class="line">                rmhmMethod.invoke(mappingHandlerMapping,<span class="keyword">new</span> <span class="title class_">Object</span>[]&#123;oj,method,mapping&#125; );</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Spring工具类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringUtils</span> <span class="keyword">implements</span> <span class="title class_">ApplicationContextAware</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ApplicationContext context;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">        context = applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ConfigurableApplicationContext <span class="title function_">getContext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (ConfigurableApplicationContext)context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setContext</span><span class="params">(ApplicationContext context)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到此,就可以动态的创建出一个接口来了。</p>
+<p>当然了,这里的代码都是写固定在代码里面的,可以提供 template 或者 通过页面定义给添加进来, 然后调用 反射&#x2F;注入到Spring容器中等操作即可.</p>
+<h3 id="基于-404-拦截请求"><a href="#基于-404-拦截请求" class="headerlink" title="基于 404 拦截请求"></a>基于 404 拦截请求</h3><p>这是 SpringBoot 本来就有的 404 拦截实现, 如果不做什么处理的话,那么进入到这里来的url地址就会是&#x2F;error,是无法满足实现的.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SelfErrorController</span> <span class="keyword">implements</span> <span class="title class_">ErrorController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">ERROR_PATH</span> <span class="operator">=</span> <span class="string">&quot;/error&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Supports the HTML Error View</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = ERROR_PATH)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">errorHtml</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">statusCode</span> <span class="operator">=</span> (Integer) request.getAttribute(<span class="string">&quot;javax.servlet.error.status_code&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">requestURI</span> <span class="operator">=</span> request.getRequestURI();</span><br><span class="line">        log.info(<span class="string">&quot;在SelfErrorController中请求的路径 : &#123;&#125; &quot;</span> ,requestURI);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拿到路径后就可以执行相应的代码逻辑.</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">realUrlName</span> <span class="operator">=</span> request.getAttribute(<span class="string">&quot;realName&quot;</span>).toString();</span><br><span class="line">        log.info(<span class="string">&quot;在SelfErrorController中真实存在的请求路径是 : --&gt; &#123;&#125; &quot;</span> , realUrlName);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(statusCode == <span class="number">401</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>  <span class="string">&quot;&#123; \&quot;code\&quot;: \&quot;401\&quot;&#125;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(statusCode == <span class="number">404</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&#123; \&quot;code\&quot;: \&quot;404\&quot;&#125;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(statusCode == <span class="number">403</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&#123; \&quot;code\&quot;: \&quot;403\&quot;&#125;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&#123; \&quot;code\&quot;: \&quot;500\&quot;&#125;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getErrorPath</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为上面无法满足的前提下,所以我们可以使用拦截来配置原来的路径.</p>
+<p>配置类:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyWebAppConfigurer</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(<span class="keyword">new</span> <span class="title class_">SelfInterceptor</span>()).addPathPatterns(<span class="string">&quot;/**&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义拦截器:</p>
+<p>这里可以看到将原有的路径给set字段realName了.</p>
+<p>所以在上面的error接口,我们调用这个realName字段就可以获取到了原有的路径.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SelfInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span><br><span class="line"><span class="params">                             Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 前置拦截器</span></span><br><span class="line">        log.info(<span class="string">&quot;前置拦截器调用 : com.iyang.hello.boot.config.SelfInterceptor.preHandle 中来.&quot;</span> );</span><br><span class="line">        <span class="type">String</span> <span class="variable">requestURI</span> <span class="operator">=</span> request.getRequestURI();</span><br><span class="line">        log.info(<span class="string">&quot;在preHandle方法中捕捉到的请求路径 : ---&gt; &#123;&#125; &quot;</span> , requestURI);</span><br><span class="line">        <span class="comment">// handler 是 ResourceHttpRequestHandler</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span><br><span class="line"><span class="params">                           Object handler, ModelAndView modelAndView)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">requestURI</span> <span class="operator">=</span> request.getRequestURI();</span><br><span class="line">        request.setAttribute(<span class="string">&quot;realName&quot;</span>,requestURI);</span><br><span class="line">        <span class="keyword">if</span>(response.getStatus() == <span class="number">404</span>)&#123;</span><br><span class="line">            log.info(<span class="string">&quot;状态是404正常操作&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(<span class="string">&quot;请求的url路径是 ---&gt; &#123;&#125; &quot;</span> , requestURI);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span><br><span class="line"><span class="params">                                Object handler, Exception ex)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>该技能看到比较有意思,具体的实现和设计思路其实是有很多种的,具体得看项目的业务是不是需要使用.</p>
+<p>并且实现的思路并不是只有这一种,肯定是还有很多种的.</p>
+<p>适合自己的业务是最好的.</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io">ruY9527</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io/2021/11/03/SpringBoot%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0%E6%8E%A5%E5%8F%A3/">https://ruy9527.github.io/2021/11/03/SpringBoot%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0%E6%8E%A5%E5%8F%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ruy9527.github.io" target="_blank">YangBao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/springBoot/">springBoot</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/article/jvm_memory_structure/" title="JVM内存结构"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_memory_structure/img-1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JVM内存结构</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/03/spring%E7%9A%84refresh%E6%96%B9%E6%B3%95%E9%98%85%E8%AF%BB/" title="spring的refresh方法阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">spring的refresh方法阅读</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/03/ArrayDeque%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/" title="ArrayDeque源码阅读记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">ArrayDeque源码阅读记录</div></div></a></div><div><a href="/2021/11/03/PriorityQueue%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/" title="PriorityQueue源码阅读记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">PriorityQueue源码阅读记录</div></div></a></div><div><a href="/2021/11/03/spring%E5%88%9B%E5%BB%BAbean-one/" title="spring创建bean_one"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">spring创建bean_one</div></div></a></div><div><a href="/2021/11/03/spring%E5%88%9D%E5%A7%8B%E5%8C%96-%E4%B8%80/" title="spring初始化(一)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">spring初始化(一)</div></div></a></div><div><a href="/2021/11/03/spring%E5%88%9D%E5%A7%8B%E5%8C%96-%E4%B8%89/" title="spring初始化(三)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">spring初始化(三)</div></div></a></div><div><a href="/2021/11/03/spring%E5%88%9D%E5%A7%8B%E5%8C%96-%E4%BA%8C/" title="spring初始化(二)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">spring初始化(二)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">实现思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%8F%8D%E5%B0%84%E5%88%9B%E5%BB%BAbean%E6%B3%A8%E5%85%A5%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">基于反射创建bean注入代码实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-404-%E6%8B%A6%E6%88%AA%E8%AF%B7%E6%B1%82"><span class="toc-number">3.2.</span> <span class="toc-text">基于 404 拦截请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

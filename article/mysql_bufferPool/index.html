@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MySql BufferPool | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="mysql的bufferPool学习记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql BufferPool">
+<meta property="og:url" content="https://ruy9527.github.io/article/mysql_bufferPool/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="mysql的bufferPool学习记录">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ruy9527.github.io/images/posts/mysql_bufferPool/img-1.png">
+<meta property="article:published_time" content="2020-12-15T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-31T05:07:42.000Z">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruy9527.github.io/images/posts/mysql_bufferPool/img-1.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/article/mysql_bufferPool/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySql BufferPool',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-12-31 13:07:42'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/mysql_bufferPool/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySql BufferPool</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-15T04:00:00.000Z" title="发表于 2020-12-15 12:00:00">2020-12-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:42.000Z" title="更新于 2025-12-31 13:07:42">2025-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySql BufferPool"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>😀 这里写文章的前言：<br>一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。</p>
+</blockquote>
+<blockquote>
+<p>可以说说你的故事：阻碍、努力、结果成果，意外与转折。</p>
+</blockquote>
+<h1 id="📝-Innodb-体系图"><a href="#📝-Innodb-体系图" class="headerlink" title="📝 Innodb 体系图"></a>📝 Innodb 体系图</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-1.png" alt="MySql BufferPool"></p>
+<h1 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h1><p>Innodb为了缓存磁盘的页，在mysql服务器启动向操作系统申请了一片连续的内存，该内存叫 Buffer pool（缓冲池）。默认情况下 128M 大小</p>
+<p>查看大小指令</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">show variables like <span class="string">&#x27;innodb_buffer_pool_size&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-2.png" alt="MySql BufferPool"></p>
+<p>读取数据时，先从缓冲池中查看是否数据的页(page)存在，不存在的话去磁盘上检索，查到后缓存到innodb_buffer_pool中，同理，插入修改删除操作也是先操作缓存里数据，之后再以一定的频率更新到磁盘上，这个刷盘的机制叫checkpoint</p>
+<p>Innodb引擎设计一个缓冲池(Buffer Pool)，来提高数据库的读写性能 有Buffer Pool后：</p>
+<ul>
+<li>当读取数据时，如果数据存于 Buffer Pool中，客户端就会直接读取 Buffer Pool中的数据，否则再去磁盘中读取</li>
+<li>当修改数据时，如果数据存在于Buffer Pool中，那直接修改 Buffer Pool中数据所在的页，然后将其页设置为脏页(该内的内存数据和磁盘上的数据已经不一致)，为了减少磁盘IO，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘</li>
+</ul>
+<h2 id="Change-Buffer"><a href="#Change-Buffer" class="headerlink" title="Change Buffer"></a>Change Buffer</h2><ul>
+<li>修改数据库数据时，如果数据页刚还在缓存页，可以修改缓存区的数据页为脏页</li>
+<li>如果数据页不在缓冲区，就需要把数据页从磁盘加载到缓存区，然后进行修改。对于写多读少的场景，会产生大量的磁盘IO，影响数据库的性能。</li>
+</ul>
+<p>Change Buffer对数据更新过程有加速作用，如果数据页没有在内存中，会将更新操作缓存到Change buffer中，这样就不需要从磁盘读入这个数据页，减少IO操作，提高了性能。先将更新操作，记录在Change Buffer 中，之后再进行 merge,真正进行数据更新</p>
+<h2 id="内部组成"><a href="#内部组成" class="headerlink" title="内部组成"></a>内部组成</h2><p>Buffer pool中默认缓存页大小和磁盘上默认的页大小是一样的，16k。</p>
+<p>为了更好的管理buffer pool的缓存页，innodb为每一个缓存页都创建了一些所谓的控制信息，这些控制信息包括页所属的表空间编号，页号，缓存页在buffer pool中的地址，链表节点信息，一些锁信息以及LSN信息，还有一些别的控制信息。</p>
+<p>每个页缓存页对应的控制信息占用的内存大小是相同的，称为 控制块。控制块和缓存页是一一对应的，都被存放在buffer pool中</p>
+<p>每个控制块占缓存页大小的5%</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-3.png" alt="MySql BufferPool"></p>
+<h2 id="free链表"><a href="#free链表" class="headerlink" title="free链表"></a>free链表</h2><p>问题: 怎么区分Buffer Pool中那些缓存页是空闲的,那些是已经被使用了的呢?</p>
+<p> 我们将所有空闲的缓存页对应的控制块作为一个节点,放在一个链表中,那么这个链表就可以被称作为free链表(空闲列表).</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-4.png" alt="MySql BufferPool"></p>
+<h2 id="flush链表"><a href="#flush链表" class="headerlink" title="flush链表"></a>flush链表</h2><p>如果我们修改了buffer pool中某个缓存页的数据,那它和磁盘上的页不一致了,这样的缓存页也成为 脏页(dirty page).</p>
+<p>问题:</p>
+<ul>
+<li>如果每发生一次修改的话,就立刻同步到磁盘上对应的页上,但是频繁的往磁盘上中写数据会严重影响程序的性能.所以每次修改缓存页的时候,并不着急立刻把修改的同步到磁盘上,而是在未来某个时间点进行同步.</li>
+<li>如果不立刻同步的话,那怎么区别buffer pool中那些页是脏页,那些页从来没被修改过呢?</li>
+</ul>
+<p>所以就需要一个存储脏页的链表来进行记录,凡是修改过的缓存页对应的控制块,都作为一个节点加入到一个链表中,这个链表节点对应的缓存页都需要被刷新到磁盘上,所以也叫flush链表,其结构和free链表一样</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-5.png" alt="MySql BufferPool"></p>
+<h2 id="LRU链表-Least-Recently-Used"><a href="#LRU链表-Least-Recently-Used" class="headerlink" title="LRU链表(Least Recently Used)"></a><strong>LRU链表(Least Recently Used)</strong></h2><p>问题: Buffer Pool对应的内存大小也是有限的,如果缓存的页占用大小超过了Buffer Pool大小,也就是free链表中也没有多余的空闲缓存页时候,该怎么处理?</p>
+<p> 将旧的缓存页从buffer pool中移除,然后再将新的放入进来.</p>
+<p>普通的LRU产生的问题:</p>
+<ul>
+<li><p>容易出现预读失效</p>
+<p>预读(Read-Ahead),提前把页放入到缓冲池,但最终mysql并没有从页中读取数据,称为预读失败</p>
+</li>
+<li><p>容易出现缓冲池污染</p>
+<p>缓冲池污染: 当某一个sql的时候,要扫描大量数据时,可能导致缓冲池的所有页都替换出去,导致大量热数据被换出,mysql性能急剧下降,这种情况叫缓冲池污染</p>
+</li>
+</ul>
+<p>Mysql的buffer pool为了处理这2个问题,在普通的LRU基础上做了一些优化,尽量让真正的热点页可以在buffer pool里存活时间更长</p>
+<p>Mysql的buffer pool处理方法: 头部的是新生代,尾部的是老生代</p>
+<ul>
+<li>如果不在Buffer Pool中,在把该页从磁盘加载到Buffer Pool中的缓存页时,就把该缓存页对应的控制块作为节点放入LRU链表的头部</li>
+<li>如果该缓存页存在Buffer Pool中,则直接把该页对应的控制块移动到LRU链表头部</li>
+</ul>
+<p>只要我们使用到某个缓存页,就把该缓存页调整到LRU链表的头部,这样LRU链表尾部就是最近最少使用的缓存页,所以当Buffer Pool中的空闲缓存页使用完时,到LRU链表的尾部找些缓存页进行淘汰</p>
+<h2 id="刷新脏页到磁盘"><a href="#刷新脏页到磁盘" class="headerlink" title="刷新脏页到磁盘"></a><strong>刷新脏页到磁盘</strong></h2><ol>
+<li>从LRU链表的冷数据中刷新一部分缓存页到磁盘.</li>
+</ol>
+<p>  从LRU尾部开始扫描一些缓存页,扫描的缓存页数量可以通过系统变量innodb_lru_scan_depth来指定,如果从这里发现了脏页,会把他们刷新到磁盘.称为BUF_FLUSH_LRU</p>
+<ol>
+<li>从flush链表中刷新一部分页面到磁盘</li>
+</ol>
+<p>  后台线程会定时从flush刷新一部分缓存页到磁盘,刷新的速率取决于当时系统是不是很繁忙.称为BUF_FLUSH_LIST</p>
+<p>InnoDB的更新操作采用 Write Ahead Log 策略，即先写入日志，再写入磁盘，通过redo log日志让mysql拥有了恢复能力 触发脏页的刷新:</p>
+<ul>
+<li>当 redo log 日志满了后，会主动触发脏页刷新到磁盘</li>
+<li>Buffer Pool空间不足时，需要将一部分数据页淘汰掉，如果淘汰的是脏页，需要先将脏页同步到磁盘</li>
+<li>Mysql认为空闲时，后台线程会定期将适量的脏页刷新到磁盘</li>
+<li>Mysql正常关闭后，会把所有的脏页刷新到磁盘</li>
+</ul>
+<h2 id="提高缓存命中率"><a href="#提高缓存命中率" class="headerlink" title="提高缓存命中率"></a>提高缓存命中率</h2><p>Buffer Pool大小是有限的，对于一些频繁访问的数据希望可以一直留在Buffer Pool,而一些很少访问的数据希望可以在某些时机可以淘汰掉，从而保证Buffer Pool不会因为太满而导致无法再缓存新的数据，同时还保留常用的数据在Buffer Pool中 实现思路：</p>
+<ul>
+<li>当访问的页在 Buffer Pool里，就直接把该页对应的 LRU 链节点移动到链表的头部</li>
+<li>当访问的页不在Buffer Pool里，除了要把页放入到 LRU 链表的头部，还要淘汰 LRU 链表尾部的节点</li>
+</ul>
+<p>Buffer Pool使用三种页和链表管理数据</p>
+<ul>
+<li>Free Page(空闲页)，表示此页面未被使用，位于 Free 链表</li>
+<li>Clean Page(干净页)，表示此页已被使用，但是页面未发生修改，位于LRU链表</li>
+<li>Dirty Page(脏页)，表示此页 已被使用 且 已经被修改，起数据和磁盘上的数据已经不一致了.当脏页上的数据写入磁盘后,内存数据和磁盘数据一致,那么该页就变成了干净页.脏页同时存在于 LRU 链表 和 Flush 链表</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-6.png" alt="MySql BufferPool"></p>
+<h2 id="预读失败"><a href="#预读失败" class="headerlink" title="预读失败"></a>预读失败</h2><p>MySql在加载数据页的时候,会把相邻的数据页一并加载进来,目的是为了减少磁盘IO 但是可能这些数据页,并没有被访问,相当于这个预读是白做的,这就是预读失效</p>
+<h2 id="预读命中率低"><a href="#预读命中率低" class="headerlink" title="预读命中率低"></a><strong>预读命中率低</strong></h2><p>要避免缓存失效带来的影响,最好就是让预读的停留在Buffer Pool里的时间要尽可能的短,让真正被访问的页才移动到LRU链表的头部,从而保证真正被读取的热数据保留在Buffer Pool里的时间尽可能的长 将LRU划分为 2 个区域, old区域 和 young 区域 young 区域在 LRU 链表的前半部分, old在后半部分 old 区域占整个 LRU 链表长度的比例 可以通过 innodb_old_blocks_pct 参数来设置, 代表整个 LRU 链表的 young 区域 和 old 区域比例是 63:37 划分 2 个区域后,预读的页就只需要加入到 old 区域的头部,当真正被访问的时候,才将页插入到young区域的头部.如果预读的页一致没有被访问,就会从old区域移除,这样就不影响young区域中的热点数据</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_bufferPool/img-7.png" alt="MySql BufferPool"></p>
+<h2 id="BufferPool污染"><a href="#BufferPool污染" class="headerlink" title="BufferPool污染"></a>BufferPool污染</h2><p>全表扫描,很多缓存页其实只会被访问一次,但是它却只因为被访问一次而进入到young区域,从而导致热点数据被替换了 LRU 链表中 young 区域就是热点数据,只要我们提高进入到 young 区域的门槛,就能有效的保证young区域里的热点数据不会被替换掉 进入到 young 区域条件增加一个停留在 old 区域的时间判断</p>
+<ul>
+<li>如果后续的访问时间与第一次访问的时间在某个时间间隔内,那么该缓存页就不会被从old区域移动到young区域的头部</li>
+<li>如果后续的访问时间与第一次访问的时间不在某个时间间隔内,那么该缓存页移动到young区域的头部</li>
+</ul>
+<p>这个时间间隔由 innodb_old_blocks_time 控制的,默认是 1000 ms</p>
+<h2 id="多个Buffer-Pool实例"><a href="#多个Buffer-Pool实例" class="headerlink" title="多个Buffer Pool实例"></a><strong>多个Buffer Pool实例</strong></h2><p>本质： Innodb向操作系统申请了一块连续的内存空间，多线程的情况下，访问buffer pool中的各链表都需要加锁处理，在Buffer pool特别大而且多线程并发访问情况下，单一的buffer pool可能会影响请求的访问速度</p>
+<p> 所以在Buffer Pool特别大的时候，可以拆分成若干个小的Buffer pool，每个buffer pool都称为一个实例，都是独立的，独立的申请内存空间，独立的管理各种链表，所以在多线程并发访问时并不会相互影响，从而提高并发处理能力</p>
+<h2 id="查看Buffer-Pool的状态信息"><a href="#查看Buffer-Pool的状态信息" class="headerlink" title="查看Buffer Pool的状态信息"></a><strong>查看Buffer Pool的状态信息</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">show engine innodb status\G;</span><br></pre></td></tr></table></figure>
+
+<p>将Buffer Pool And Memory结果复制出来：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">----------------------</span><br><span class="line">BUFFER POOL AND MEMORY</span><br><span class="line">----------------------</span><br><span class="line">Total large memory allocated <span class="number">0</span></span><br><span class="line">Dictionary memory allocated <span class="number">2523782</span></span><br><span class="line">Buffer pool size   <span class="number">8192</span></span><br><span class="line">Free buffers       <span class="number">1039</span></span><br><span class="line">Database pages     <span class="number">7060</span></span><br><span class="line">Old database pages <span class="number">2588</span></span><br><span class="line">Modified db pages  <span class="number">0</span></span><br><span class="line">Pending reads      <span class="number">0</span></span><br><span class="line">Pending writes: LRU <span class="number">0</span>, flush list <span class="number">0</span>, single page <span class="number">0</span></span><br><span class="line">Pages made young <span class="number">5477</span>, not young <span class="number">20908</span></span><br><span class="line"><span class="number">0.00</span> youngs/s, <span class="number">0.00</span> non-youngs/s</span><br><span class="line">Pages read <span class="number">1331</span>, created <span class="number">10341</span>, written <span class="number">57134</span></span><br><span class="line"><span class="number">0.00</span> reads/s, <span class="number">0.00</span> creates/s, <span class="number">0.00</span> writes/s</span><br><span class="line">Buffer pool hit rate <span class="number">1000</span> / <span class="number">1000</span>, young-making rate <span class="number">0</span> / <span class="number">1000</span> not <span class="number">0</span> / <span class="number">1000</span></span><br><span class="line">Pages read ahead <span class="number">0.00</span>/s, evicted without access <span class="number">0.00</span>/s, Random read ahead <span class="number">0.00</span>/s</span><br><span class="line">LRU len: <span class="number">7060</span>, unzip_LRU len: <span class="number">0</span></span><br><span class="line">I/O sum[<span class="number">0</span>]:cur[<span class="number">0</span>], unzip sum[<span class="number">0</span>]:cur[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Total large memory allocated： 代表Buffer Pool向操作系统申请的连续内存空间大小，包括全部控制块，缓存页，以及碎片的大小</li>
+<li>Dictionary memory allocated： 为数据字典信息分配的内存空间大小，注意这个内存空间和 Buffer Pool 没啥关系，不包括在 Total memory allocated 中。</li>
+<li>Buffer pool size： 代表该Buffer Pool可以容纳多少缓存页，单位是页</li>
+<li>Free buffers： 当前Buffer Pool还有多少空闲缓存页，也就是free链表中还有多少节点</li>
+<li>Database pages：代表LRU链表中的页的数量，包含了young和old两个区域的节点数量</li>
+<li>Old database pages： LRU链表old区域的节点数量</li>
+<li>Modified db pages： 脏页数量，包含了young和old两个区域的节点数量</li>
+<li>Pending reads： 正在等待从磁盘上加载到Buffer Pool中的页面数量</li>
+<li>Pending writes：<ul>
+<li>LRU： 即将从LRU链表中刷新到磁盘中的页面数量</li>
+<li>flush list：即将从flush链表中刷新到磁盘中的页面数量</li>
+<li>single page：即将以单个页面的形式刷新到磁盘中的页面数量</li>
+</ul>
+</li>
+<li>Pages made young： LRU链表中曾经从old区域移动到young区域头部的节点数量</li>
+<li>Pages made not young： 在将innodb_old_blocks_time设置的值大于0时，首次访问或者后续访问某个处在old区域的节点时由于不符合时间间隔的限制而不能将其移动到young区域头部时，page made not young的值会加1</li>
+<li>youngs&#x2F;s： 每秒从old区域移动到young区域头部的节点数量</li>
+<li>non-youngs&#x2F;s： 每秒由于不满足时间限制而不能从old区域移动到young区域头部的节点数量</li>
+<li>Pages read,created,written: 代表读取，创建，写入了多少页，后续跟着读取，创建，写入的速率</li>
+<li>Buffer pool hit rate：代表在过去某段时间，平均访问1000次页面，有多少次该页面已经被缓存到Buffer Pool了</li>
+<li>young-making rate： 表示在过去某段时间，平均访问 1000 次页面，有多少次访问使页面移动到 young 区域的头部了</li>
+<li>not：表示在过去某段时间，平均访问 1000 次页面，有多少次访问没有使页面移动到 young 区域的头部。</li>
+<li>LRU len： 代表LRU链表节点的数量</li>
+<li>unzip_LRU len： 代表unzip_LRU链表中节点数量</li>
+<li>I&#x2F;O sum：最近 50s 读取磁盘页的总数。</li>
+<li>I&#x2F;O cur：现在正在读取的磁盘页数量。</li>
+<li>I&#x2F;O unzip sum：最近 50s 解压的页面数量。</li>
+<li>I&#x2F;O unzip cur：正在解压的页面数量。</li>
+</ul>
+<h1 id="🤗-总结归纳"><a href="#🤗-总结归纳" class="headerlink" title="🤗 总结归纳"></a>🤗 总结归纳</h1><p>Buffer Pool来 提高 数据库的 读写性能 InnoDB通过三种链表来管理缓存页：</p>
+<ul>
+<li>Free List(空闲页链表)：管理空闲页</li>
+<li>Flush List(脏页链表)：管理脏页</li>
+<li>LRU List(管理脏页+干净页)：将最近且经常查询的数据缓存其中，而不是经常查询的数据就淘汰出去</li>
+</ul>
+<p>InnoDB对LRU做了一些优化，</p>
+<ul>
+<li>将LRU链表 分为 young和old两个区域，加入缓存池的页，优先插入old区域；页被访问时，才进入young区域，目的是为了解决预读失效的问题</li>
+<li>当**「页被访问」且「 old 区域停留时间超过 innodb_old_blocks_time 阈值（默认为1秒）」**时，才会将页插入到 young 区域，否则还是插入到 old 区域，目的是为了解决批量数据访问，大量热数据淘汰的问题</li>
+</ul>
+<h1 id="📎-参考文章"><a href="#📎-参考文章" class="headerlink" title="📎 参考文章"></a>📎 参考文章</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/">https://xiaolincoding.com/mysql/</a></li>
+</ul>
+<blockquote>
+<p>💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io">ruY9527</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io/article/mysql_bufferPool/">https://ruy9527.github.io/article/mysql_bufferPool/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ruy9527.github.io" target="_blank">YangBao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mysql/">mysql</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/article/mybatis_source1/" title="MyBatis源码阅读搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MyBatis源码阅读搭建</div></div></a></div><div class="next-post pull-right"><a href="/article/mysql_log/" title="MySql日志"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_log/img-1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySql日志</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/article/mysql_log/" title="MySql日志"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_log/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-19</div><div class="title">MySql日志</div></div></a></div><div><a href="/article/mysql_partition_databases_and_tables/" title="MySql分库分表"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mysql_partition_databases_and_tables/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-07</div><div class="title">MySql分库分表</div></div></a></div><div><a href="/article/mysql_special_sql/" title="记录奇怪的SQL"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-02</div><div class="title">记录奇怪的SQL</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%9D-Innodb-%E4%BD%93%E7%B3%BB%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">📝 Innodb 体系图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Buffer-Pool"><span class="toc-number">2.</span> <span class="toc-text">Buffer Pool</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Change-Buffer"><span class="toc-number">2.1.</span> <span class="toc-text">Change Buffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E7%BB%84%E6%88%90"><span class="toc-number">2.2.</span> <span class="toc-text">内部组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#free%E9%93%BE%E8%A1%A8"><span class="toc-number">2.3.</span> <span class="toc-text">free链表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flush%E9%93%BE%E8%A1%A8"><span class="toc-number">2.4.</span> <span class="toc-text">flush链表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LRU%E9%93%BE%E8%A1%A8-Least-Recently-Used"><span class="toc-number">2.5.</span> <span class="toc-text">LRU链表(Least Recently Used)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E6%96%B0%E8%84%8F%E9%A1%B5%E5%88%B0%E7%A3%81%E7%9B%98"><span class="toc-number">2.6.</span> <span class="toc-text">刷新脏页到磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E9%AB%98%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87"><span class="toc-number">2.7.</span> <span class="toc-text">提高缓存命中率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AF%BB%E5%A4%B1%E8%B4%A5"><span class="toc-number">2.8.</span> <span class="toc-text">预读失败</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AF%BB%E5%91%BD%E4%B8%AD%E7%8E%87%E4%BD%8E"><span class="toc-number">2.9.</span> <span class="toc-text">预读命中率低</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BufferPool%E6%B1%A1%E6%9F%93"><span class="toc-number">2.10.</span> <span class="toc-text">BufferPool污染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AABuffer-Pool%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.11.</span> <span class="toc-text">多个Buffer Pool实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BBuffer-Pool%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%A1%E6%81%AF"><span class="toc-number">2.12.</span> <span class="toc-text">查看Buffer Pool的状态信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%A4%97-%E6%80%BB%E7%BB%93%E5%BD%92%E7%BA%B3"><span class="toc-number">3.</span> <span class="toc-text">🤗 总结归纳</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%8E-%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">4.</span> <span class="toc-text">📎 参考文章</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

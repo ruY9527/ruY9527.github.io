@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java对象创建过程 | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="JVM创建对象的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java对象创建过程">
+<meta property="og:url" content="https://ruy9527.github.io/article/jvm_create_object/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="JVM创建对象的过程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ruy9527.github.io/images/posts/jvm_create_object/img-1.png">
+<meta property="article:published_time" content="2021-12-18T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-31T05:04:36.000Z">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruy9527.github.io/images/posts/jvm_create_object/img-1.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/article/jvm_create_object/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java对象创建过程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-12-31 13:04:36'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/posts/jvm_create_object/img-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java对象创建过程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-18T04:00:00.000Z" title="发表于 2021-12-18 12:00:00">2021-12-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:04:36.000Z" title="更新于 2025-12-31 13:04:36">2025-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JVM/">JVM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java对象创建过程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>😀 这里写文章的前言： Java创建一个对象的流程</p>
+</blockquote>
+<h1 id="📝-创建对象流程"><a href="#📝-创建对象流程" class="headerlink" title="📝 创建对象流程"></a>📝 创建对象流程</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-1.png" alt="Java对象创建过程"></p>
+<h1 id="检查加载"><a href="#检查加载" class="headerlink" title="检查加载"></a>检查加载</h1><p>类加载器会维护一个加载的类的集合，通过检查该集合中是否已经存在类的定义，来确定是否需要重新加载类的字节码。</p>
+<p>如果类还没有被加载过，类加载器会尝试从指定的位置加载类的字节码，并进行必要的解析和链接操作。如果类已经被加载过，类加载器会直接返回该类的引用，无需再次加载。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-2.png" alt="Java对象创建过程"></p>
+<h1 id="分配内存"><a href="#分配内存" class="headerlink" title="分配内存"></a>分配内存</h1><p>当类被加载完之后，虚拟机就会给对象分配内存，此时对象的大小已经确定，虚拟机会从的内存域中划分出该对象大小空间的区域供存放该对象</p>
+<h2 id="指针碰撞"><a href="#指针碰撞" class="headerlink" title="指针碰撞"></a>指针碰撞</h2><p>把堆上的一部分内存分成两部分，一部分依次放满了对象，此时对象在这部分内存上是整齐排放着，另一部分是空白内存区域，等待放对象。<br>两块区域的间隔点是用一个指针进行标记，如果在这块内存中又创建了对象，则指针会向后移动这个对象的大小的地址，供这个对象存放</p>
+<p>指针碰撞的优点是分配速度快，只需要移动指针即可完成分配，无需进行复杂的内存搜索或碎片整理。然而，这种方式只适用于具有连续内存布局的情况，例如使用标记整理或复制算法的垃圾回收器。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-3.png" alt="Java对象创建过程"></p>
+<h2 id="空闲列表"><a href="#空闲列表" class="headerlink" title="空闲列表"></a>空闲列表</h2><p>当内存上存放的对象<strong>不是整齐规整</strong>存放的话，此时内存空间就会碎片化，就不能使用指针碰撞的方式去分配内存，空闲列表的方式就是维护一个可以存放对象的内存地址的<strong>集合列表</strong>，即记录哪些内存区域是可以存放对象的，当创建对象时，在列表中找一个空间合适的一块区域去存放，然后再更新列表</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-4.png" alt="Java对象创建过程"></p>
+<h2 id="分配内存并发问题"><a href="#分配内存并发问题" class="headerlink" title="分配内存并发问题"></a>分配内存并发问题</h2><p>  <strong>在以上分配内存的过程中，由于堆空间是线程共享的, 如果在给对象a分配内存的同时指针还没来得及修改，对象b同时也使用了原来的这个指针来分配内存。</strong></p>
+<p>**就会出现一块内存分配给了两个对象，**<strong>即并发分配问题</strong></p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>  通过cas保证只有一个线程能分配到正确的，对象在进行分配内存之前会将该线程期望的指针值与内存上的原有的指针值进行比较，如果相同，则先修改内存上的指针值，即向后移动该对象大小的空间，然后存放对象。如果不相同，则返回现在的指针值，然后重试以上操作</p>
+<h3 id="分配优化"><a href="#分配优化" class="headerlink" title="分配优化"></a>分配优化</h3><p><strong>获取操作指针这个操作，可能是多线程并发的，为了保证成功会采用CAS的方式去执行，但是CAS多次失败会有性能瓶颈，会先使用TLAB的分配方式去分配内存</strong></p>
+<ol>
+<li>TLAB：在内存中分配一块很小的空间作为线程私有的，直接就可以分配了，</li>
+<li>条件: 需要对象小于eden区的1%（默认）， 可通过配置TLABsize配置大小</li>
+</ol>
+<p>使用<strong>TLAB</strong>可以避免一系列的非线程安全问题，同时还能够提升内存分配的吞吐量，因此我们可以讲这种内存分配方式成为<strong>快速分配策略</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-5.png" alt="Java对象创建过程"></p>
+<h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><p>给对象赋默认值。如果不赋默认值，这个对象的该字段如果不set值的话，就无法get该字段的内容，程序会出错。如果赋默认值之后，就可以返回默认值</p>
+<h1 id="设置对象头"><a href="#设置对象头" class="headerlink" title="设置对象头"></a>设置对象头</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-6.png" alt="Java对象创建过程"></p>
+<p>对象组成：</p>
+<ol>
+<li>对象头（8） + 指针（4）+ 数组（4） 字节</li>
+<li>实例数据</li>
+<li>对齐填充</li>
+</ol>
+<p>对象头： 包含了该对象的必要信息，比如对象的分代年龄，锁信息，hashCode，偏向锁ID，类型指针（压缩4字节，没压缩8字节），数组长度</p>
+<p>实例数据： 对象中各个实例字段的数据</p>
+<p>对其填充： 其中为了保持对象内存的整齐性，包括了对齐指针来进行对象的内存大小填充，能被8整除，为了保证数据在同一个缓存行，计算寻址最优</p>
+<p>年龄分代最大值是15（4个bit只能存储到15）设置超过了15会报错，<strong>must be between 0 and 15</strong></p>
+<h1 id="执行Clinet-方法"><a href="#执行Clinet-方法" class="headerlink" title="执行Clinet&lt;&gt;()方法"></a>执行Clinet&lt;&gt;()方法</h1><p>为对象赋用户自己的值，执行构造方法, 给变量赋最终值</p>
+<h1 id="对象的类元信息解析"><a href="#对象的类元信息解析" class="headerlink" title="对象的类元信息解析"></a>对象的类元信息解析</h1><p>对象在堆中创建，其对象头中存在指向该对象的<strong>类元信息的指针 Class pointer</strong></p>
+<p>也就是说，如果对象想要找到该对象的成员方法的具体方法内容（代码），就是通过这个对象头内的指针找的</p>
+<p>比如: 对象的add()方法需要通过这个类指针去找到对应的add方法相关信息</p>
+<p>Class对象，也是在堆，是提供给程序去访问方法区类信息的入口对象</p>
+<p><strong>区分 对象、类对象、类元信息:</strong></p>
+<p>对象:  是一个类的其中一个实体，可以有多个</p>
+<p>类对象： class&lt;?extends Duixiang&gt; duixiangClass &#x3D; 对象.getClass();类加载完之后，是java虚拟机为方便用户操作该类的类元信息而创建的镜像对象，里面没有该类的信息，但是可以通过该类对象可以访问该类的信息。</p>
+<p>类元信息：存放类的相关信息，比如变量与成员方法，在方法区中, 通过 Class 或者 klass 指针访问操作</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-7.png" alt="Java对象创建过程"></p>
+<h1 id="对象怎么定位"><a href="#对象怎么定位" class="headerlink" title="对象怎么定位"></a>对象怎么定位</h1><h2 id="句柄池"><a href="#句柄池" class="headerlink" title="句柄池"></a>句柄池</h2><ul>
+<li>句柄池映射对象和引用之间的的关系</li>
+<li>优点:垃圾回收的时候只要修改句柄对应的地址,更好的统一管理,有稳定性</li>
+<li>对象移动了地址，不需要重新改变指针， 只需要改变句柄池</li>
+<li>缺点:效率更低,需要转换关系</li>
+</ul>
+<h2 id="直接指针"><a href="#直接指针" class="headerlink" title="直接指针"></a>直接指针</h2><ul>
+<li>优点:查询效率更快,减少了类似句柄的转换关系的开销</li>
+<li>缺点:垃圾回收的时候, 引用需要修改, 被改了, 其他在用的时候可能出问题.</li>
+</ul>
+<h1 id="对象分配策略"><a href="#对象分配策略" class="headerlink" title="对象分配策略"></a>对象分配策略</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-8.png" alt="Java对象创建过程"></p>
+<ol>
+<li>能否在栈上分配</li>
+<li>对象优先在Eden区分配</li>
+</ol>
+<details><summary>是否能通过TLAB方式分配在 eden 区</summary>
+
+</details>
+
+<ol>
+<li><ol>
+<li>大对象直接进入老年代 (** -XX:PretenureSizeThreshold** 配置大小, 默认是0,空间不够了才触发)</li>
+</ol>
+</li>
+<li>长期存活的对象将进入老年代</li>
+<li>动态年龄判断（相同年龄占单个S区一半）</li>
+<li>空间分配担保（利用Young GC防止频繁的fgc）</li>
+</ol>
+<h2 id="对象栈上分配原理"><a href="#对象栈上分配原理" class="headerlink" title="对象栈上分配原理"></a>对象栈上分配原理</h2><ul>
+<li>通过逃逸分析算法，判断这个对象的作用域，如果该对象只在该栈帧中调用，即方法运行完成即回收，则在栈的该线程栈的栈帧上创建，此方法运行完成，即在对应栈帧上出栈，然后立即被回收, 避免了在堆上创建，然后进行gc后回收的耗时与浪费空间。</li>
+<li>上边说是在栈上创建对象，其实是将该对象分解为一个个标量进行创建在栈上，并没有真的在栈上创建对象，因为对象的创建需要一块连续的空间，栈上不一定有。标量即不可被再次分解的量JAVA的基本数据类型就是标量（如：int，long等基本数据类型以及reference类型等），标量的对立就是可以被进一步分解的量，而这种量称之为聚合量。而在JAVA中对象就是可以被进一步分解的聚合量</li>
+</ul>
+<h2 id="是否能在TLAB分配"><a href="#是否能在TLAB分配" class="headerlink" title="是否能在TLAB分配"></a>是否能在TLAB分配</h2><p>不管是<strong>指针碰撞</strong>还是<strong>空闲散列表</strong>分配的方法,都需要先获得操作指针,获取操作指针可能是并发操作,会通过CAS去进行**,CAS的瓶颈在于多次咨询会影响CPU空消耗**</p>
+<p>如果对象大小小于<strong>1%Eden</strong>区大小,JVM会在堆内分配一块<strong>线程私有</strong>的内存地址,给到线程进行<strong>TLAB</strong>分配</p>
+<h2 id="优先Eden分配"><a href="#优先Eden分配" class="headerlink" title="优先Eden分配"></a>优先Eden分配</h2><p>大多数情况下，对象在新生代 Eden 区分配，当 Eden 区空间不够时，发起 Minor GC</p>
+<details><summary>关于 Minor GC 和 Full GC</summary>
+
+</details>
+
+<h2 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h2><p>大对象是指需要连续内存空间的对象，最典型的大对象是那种很长的字符串以及数组。经常出现大对象会提前触发垃 圾收集以获取足够的连续空间分配给大对象。</p>
+<p>提供 -<strong>XX:PretenureSizeThreshold</strong> 参数，大于此值的对象或者是大于eden区的剩余空间直接在老年代分配，避免在 Eden 区和 Survivor 区之间的大量内存复制</p>
+<h2 id="长期存活的对象进入老年代"><a href="#长期存活的对象进入老年代" class="headerlink" title="长期存活的对象进入老年代"></a>长期存活的对象进入老年代</h2><p>JVM 为对象定义年龄计数器，经过 Minor GC 依然存活，并且能被 Survivor 区容纳的，移被移到 Survivor 区，年龄就增加 1 岁，增加到一定年龄则移动到老年代中（默认 15 岁，通过 -XX:MaxTenuringThreshold 设置）</p>
+<h2 id="动态对象年龄判断"><a href="#动态对象年龄判断" class="headerlink" title="动态对象年龄判断"></a>动态对象年龄判断</h2><p>JVM 并不是永远地要求对象的年龄必须达到 MaxTenuringThreshold 才能晋升老年代，如果在 Survivor 区中<strong>相同年龄</strong>所有对象大小的总和大于  <strong>单个Survivor 空间的一半</strong>，则年龄大于或等于该年龄的对象可以直接进入老年代， 无需等待 MaxTenuringThreshold 中要求的年龄</p>
+<p><strong>原因分析</strong>:  因为一半的对象占了其中一个 S 区, 理论上存活的次数越久, 而这些对象后续大概率还是存活, 这样挪来挪去会浪费性能,  并且如果这个时候有大量的新对象进来, 空间不够用了,  会把新来的对象直接放到老年代, 这 些新对象本来可能是马上死亡的,  但是由于已经放入老年代, 必须等下一次 full gc 才能把已经无用的新对象清理掉</p>
+<h2 id="空间分配担保机制"><a href="#空间分配担保机制" class="headerlink" title="空间分配担保机制"></a>空间分配担保机制</h2><p><strong>当出现大量对象在一次 Minor GC 后仍然存活的情况时，Survivor 区可能容纳不下这么多对象，此时，就需要老年代进行分配担保，即将 Survivor 无法容纳的对象直接进入老年代。</strong></p>
+<p>这么做有一个前提，就是老年代得装得下这么多对象。可是在一次 GC 操作前，虚拟机并不知道到底会有多少对象存活，所以空间分配担保有这样一个判断流程</p>
+<p>发生了Minor GC,虚拟机先检查老年代的最大可连续空间是否大于新生代所有的对象的总空间：</p>
+<ul>
+<li>如果大于，Minor GC 一定是安全的</li>
+</ul>
+<details><summary>如果小于，虚拟机会查看 HandlePromotionFailure 参数，看看是否允许担保失败</summary>
+
+</details>
+
+<ul>
+<li>不过 JDK 6 Update 24 后，HandlePromotionFailure 参数就没有用了，规则变为只要老年代的连续空间大于新生代对象总大小或者历次晋升的平均大小就会进行 Minor GC，否则将进行 Full GC</li>
+</ul>
+<h1 id="new一个对象过程"><a href="#new一个对象过程" class="headerlink" title="new一个对象过程"></a>new一个对象过程</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-9.png" alt="Java对象创建过程"></p>
+<p>0.先开辟一个空间<br>4初始化值<br>7.建立关联关系<br>（可能发生重排序，是可能把7和4换一个顺序的， 因为不影响最终一致性）</p>
+<h1 id="如何计算一个对象大小"><a href="#如何计算一个对象大小" class="headerlink" title="如何计算一个对象大小"></a>如何计算一个对象大小</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-10.png" alt="Java对象创建过程"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_create_object/img-11.png" alt="Java对象创建过程"></p>
+<h2 id="借助jol来计算"><a href="#借助jol来计算" class="headerlink" title="借助jol来计算"></a>借助jol来计算</h2><p>maven依赖</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.openjdk.jol&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;jol-core&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;<span class="number">0.14</span>&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">Person</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;baoYang&quot;</span>, <span class="number">25</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;Object Size: &quot;</span> + VM.current().sizeOf(p));</span><br><span class="line">        System.out.println(ClassLayout.parseInstance(p).toPrintable());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Object Size: <span class="number">24</span></span><br><span class="line">com.yang.keyword.basic.Person object internals:</span><br><span class="line"> OFFSET  SIZE               TYPE DESCRIPTION                               VALUE</span><br><span class="line">      <span class="number">0</span>     <span class="number">4</span>                    (object header)                           <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> (<span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span>) (<span class="number">1</span>)</span><br><span class="line">      <span class="number">4</span>     <span class="number">4</span>                    (object header)                           <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> (<span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span>) (<span class="number">0</span>)</span><br><span class="line">      <span class="number">8</span>     <span class="number">4</span>                    (object header)                           <span class="number">43</span> c1 <span class="number">00</span> f8 (<span class="number">01000011</span> <span class="number">11000001</span> <span class="number">00000000</span> <span class="number">11111000</span>) (-<span class="number">134168253</span>)</span><br><span class="line">     <span class="number">12</span>     <span class="number">4</span>                <span class="type">int</span> Person.age                                <span class="number">25</span></span><br><span class="line">     <span class="number">16</span>     <span class="number">4</span>   java.lang.String Person.name                               (object)</span><br><span class="line">     <span class="number">20</span>     <span class="number">4</span>                    (loss due to the next object alignment)</span><br><span class="line">Instance size: <span class="number">24</span> bytes</span><br><span class="line">Space losses: <span class="number">0</span> bytes internal + <span class="number">4</span> <span class="type">bytes</span> <span class="variable">external</span> <span class="operator">=</span> <span class="number">4</span> bytes total</span><br></pre></td></tr></table></figure>
+
+<h1 id="🤗-总结归纳"><a href="#🤗-总结归纳" class="headerlink" title="🤗 总结归纳"></a>🤗 总结归纳</h1><h1 id="📎-参考文章"><a href="#📎-参考文章" class="headerlink" title="📎 参考文章"></a>📎 参考文章</h1><blockquote>
+<p>💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io">ruY9527</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io/article/jvm_create_object/">https://ruy9527.github.io/article/jvm_create_object/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ruy9527.github.io" target="_blank">YangBao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/JVM/">JVM</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/article/jvm_gc_info/" title="JVM垃圾回收"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_gc_info/img-1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JVM垃圾回收</div></div></a></div><div class="next-post pull-right"><a href="/article/jvm_direct_memory/" title="JVM直接内存"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_direct_memory/img-1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JVM直接内存</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/article/classLoad/" title="Class加载"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/classLoad/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-23</div><div class="title">Class加载</div></div></a></div><div><a href="/article/jvm_base/" title="JVM基础"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_base/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-02</div><div class="title">JVM基础</div></div></a></div><div><a href="/article/jvm_direct_memory/" title="JVM直接内存"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_direct_memory/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-10</div><div class="title">JVM直接内存</div></div></a></div><div><a href="/article/jvm_gc_info/" title="JVM垃圾回收"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_gc_info/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-22</div><div class="title">JVM垃圾回收</div></div></a></div><div><a href="/article/jvm_memory_structure/" title="JVM内存结构"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/jvm_memory_structure/img-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-02</div><div class="title">JVM内存结构</div></div></a></div><div><a href="/article/reentrantLock_note/" title="ReentrantLock源码笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-07</div><div class="title">ReentrantLock源码笔记</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%9D-%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">📝 创建对象流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.</span> <span class="toc-text">检查加载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="toc-number">3.</span> <span class="toc-text">分配内存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E"><span class="toc-number">3.1.</span> <span class="toc-text">指针碰撞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">空闲列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="toc-number">3.3.</span> <span class="toc-text">分配内存并发问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">3.3.1.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%85%8D%E4%BC%98%E5%8C%96"><span class="toc-number">3.3.2.</span> <span class="toc-text">分配优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%B1%A1%E5%A4%B4"><span class="toc-number">5.</span> <span class="toc-text">设置对象头</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A7%E8%A1%8CClinet-%E6%96%B9%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">执行Clinet&lt;&gt;()方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%85%83%E4%BF%A1%E6%81%AF%E8%A7%A3%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">对象的类元信息解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%80%8E%E4%B9%88%E5%AE%9A%E4%BD%8D"><span class="toc-number">8.</span> <span class="toc-text">对象怎么定位</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A5%E6%9F%84%E6%B1%A0"><span class="toc-number">8.1.</span> <span class="toc-text">句柄池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E9%92%88"><span class="toc-number">8.2.</span> <span class="toc-text">直接指针</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="toc-number">9.</span> <span class="toc-text">对象分配策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%A0%88%E4%B8%8A%E5%88%86%E9%85%8D%E5%8E%9F%E7%90%86"><span class="toc-number">9.1.</span> <span class="toc-text">对象栈上分配原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%AF%E5%90%A6%E8%83%BD%E5%9C%A8TLAB%E5%88%86%E9%85%8D"><span class="toc-number">9.2.</span> <span class="toc-text">是否能在TLAB分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88Eden%E5%88%86%E9%85%8D"><span class="toc-number">9.3.</span> <span class="toc-text">优先Eden分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%AF%B9%E8%B1%A1%E7%9B%B4%E6%8E%A5%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3"><span class="toc-number">9.4.</span> <span class="toc-text">大对象直接进入老年代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%BF%E6%9C%9F%E5%AD%98%E6%B4%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3"><span class="toc-number">9.5.</span> <span class="toc-text">长期存活的对象进入老年代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%AF%B9%E8%B1%A1%E5%B9%B4%E9%BE%84%E5%88%A4%E6%96%AD"><span class="toc-number">9.6.</span> <span class="toc-text">动态对象年龄判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E5%88%86%E9%85%8D%E6%8B%85%E4%BF%9D%E6%9C%BA%E5%88%B6"><span class="toc-number">9.7.</span> <span class="toc-text">空间分配担保机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#new%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E8%BF%87%E7%A8%8B"><span class="toc-number">10.</span> <span class="toc-text">new一个对象过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%A4%A7%E5%B0%8F"><span class="toc-number">11.</span> <span class="toc-text">如何计算一个对象大小</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%9F%E5%8A%A9jol%E6%9D%A5%E8%AE%A1%E7%AE%97"><span class="toc-number">11.1.</span> <span class="toc-text">借助jol来计算</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%A4%97-%E6%80%BB%E7%BB%93%E5%BD%92%E7%BA%B3"><span class="toc-number">12.</span> <span class="toc-text">🤗 总结归纳</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%8E-%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">13.</span> <span class="toc-text">📎 参考文章</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

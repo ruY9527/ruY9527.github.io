@@ -1,0 +1,413 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>YangBao - 知识笔记</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java &#x2F; 大数据 &#x2F; 中间件 技术笔记">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YangBao">
+<meta property="og:url" content="https://ruy9527.github.io/page/6/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="Java &#x2F; 大数据 &#x2F; 中间件 技术笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/ruY9527">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="Java,Spring,MyBatis,JVM,大数据,Spark,Kafka,Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/ruY9527"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/page/6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'YangBao',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-08-12 12:38:16'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">YangBao</h1><div id="site_social_icons"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left"><a href="/article/post-fe71009a9d/" title="bin/yarn-session.sh -nm testFlink_流批基础入门"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fe71009a9d/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="bin/yarn-session.sh -nm testFlink_流批基础入门"></a></div><div class="recent-post-info"><a class="article-title" href="/article/post-fe71009a9d/" title="bin/yarn-session.sh -nm testFlink_流批基础入门">bin/yarn-session.sh -nm testFlink_流批基础入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-02T04:00:00.000Z" title="发表于 2021-07-02 12:00:00">2021-07-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T04:53:15.000Z" title="更新于 2025-12-31 12:53:15">2025-12-31</time></span></div><div class="content">
+😀 这里写文章的前言：Flink基础知识入门案例
+
+📝 基础知识Flink分布式处理引擎，用于有界和无界数据流进行有状态计算
+Flink特点
+
+
+
+无界数据流：
+
+
+
+有界数据流：
+
+
+
+把流处理需要的额外数据保存成一个“状态”，然后针对这条数据进行处理，并且更新状态，这就是有所的有状态的流处理
+
+状态在内存中：优点，速度快;缺点：可靠性差
+状态在分布式中：优点：可靠性高;缺点：速度慢
+
+📝 Flink部署
+客户端(Client): 代码由客户端获取并作转换，之后交给JobManager
+JobManager是Flink集群里的管事人，对作业进行中央调度管理;而它获取到要执行的作业后，会进一步处理转换，然后分发给真正的TaskManager
+TaskManager：真正干活的人，数据的处理操作都是他们来做的
+
+Session Mode(会话模式)先启动一个集群，然后保持会话，在这个会话中通过客户端提交作业。集群启动时所有的资源都已经确定了，所有提交的作业会竞争集群中的资源
+会话模式比较适合单个规模小，执行时间短的大量作业
+
+单作业任务(Per-Job Mode)回话模式因为资源 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/article/sonarqube_docker/" title="SonarQube安装使用手册(docker版)"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/sonarqube_docker/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SonarQube安装使用手册(docker版)"></a></div><div class="recent-post-info"><a class="article-title" href="/article/sonarqube_docker/" title="SonarQube安装使用手册(docker版)">SonarQube安装使用手册(docker版)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-02T04:00:00.000Z" title="发表于 2021-07-02 12:00:00">2021-07-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T03:57:24.000Z" title="更新于 2025-12-31 11:57:24">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%8F%92%E4%BB%B6/">插件</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%8F%92%E4%BB%B6/">插件</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E5%BC%80%E5%8F%91/">开发</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SonarQube/">SonarQube</a></span></div><div class="content">
+😀 这里写文章的前言：SonarQube代码质量检测的工具，对代码进行一定规则的校验等等，算是代码层面的质量和规范                                                             基于docker来进行安装                                                              
+
+📝 基于docker安装组件版本
+MySql： 5.7
+SonarQube: 7.8-community
+
+启动过程MySql初始化创建一个sonar的数据库(编码最好是utf-8,避免中文相关的乱码问题)
+名字也可以自己来取
+docker拉镜像配置如果你拉取镜像存在问题的话,配置一下加速的地址来拉取,避免一直卡顿等问题
+&quot;registry-mirrors&quot;: [  &quot;https://0dj0t5fb.mirror.aliyuncs.com&quot;,  &quot;https://docker.mirrors.ustc.edu.cn&quot;,  &quot;h ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/x_ui_1/" title="x-ui翻墙安装">x-ui翻墙安装</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-02T04:00:00.000Z" title="发表于 2021-07-02 12:00:00">2021-07-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T04:52:45.000Z" title="更新于 2025-12-31 12:52:45">2025-12-31</time></span></div><div class="content">
+😀 这里写文章的前言：利用 x-ui 在进行购买的外国服务器进行翻 
+
+📝 主旨内容Vultr注册链接：https://www.vultr.com/?ref=8753714
+VPS服务器系统选择 Debian 10 x64
+X-UI 安装代码：wget -N https://gitlab.com/rwkgyg/x-ui-yg/raw/main/install.sh &amp;&amp; bash install.sh
+#放行端口iptables -I INPUT -p tcp –dport 443 -j ACCEPT
+FinalShell下载：https://wa6.lanzoui.com/ihjg2y3h14jFinalShell备用下载（含MAC版）：http://www.hostbuf.com/t/988.html科学上网软件下载：https://github.com/Kejifaxian/welcome/订阅转换：https://acl4ssr-sub.github.io/
+Vultr注册链接：https://www.秃鹫。。.com&#x2F;？ref&#x3D;875 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/article/kafka_basic/" title="Kafka基础"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/kafka_basic/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kafka基础"></a></div><div class="recent-post-info"><a class="article-title" href="/article/kafka_basic/" title="Kafka基础">Kafka基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-05T04:00:00.000Z" title="发表于 2021-06-05 12:00:00">2021-06-05</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:06:06.000Z" title="更新于 2025-12-31 13:06:06">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/kafka/">kafka</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 架构图
+producer： 生产者，消息的产生者。
+Broker： broker是kafka实例，每个服务器上有一个或多个kafka实例，理想情况下，每个broker对应一台服务器。比如broker-0,broker-1,broker-2分别是不重复等编号
+Topic：消息的主题，可以理解为消息分类，kafka的数据就保存在topic里。每个broker可以创建多个topic
+Partition：Topic的分区，每个topic有多个分区，分区的作用是负载，提高kafka的吞吐量。同一个topic在不同的分区数据是不重复等，每个partition的表形式就是一个一个文件夹
+Replication：每个分区都有副本，副本的作用是备胎。当主分区(Leader)故障的时候会选择一个Follower上位，成为Leader。
+Message：每一条消息的主题
+Consumer：消费者，消息的消费方
+ConsumerGro ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/article/redis_common_problem/" title="Redis缓存常见问题"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/redis_common_problem/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis缓存常见问题"></a></div><div class="recent-post-info"><a class="article-title" href="/article/redis_common_problem/" title="Redis缓存常见问题">Redis缓存常见问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-13T04:00:00.000Z" title="发表于 2021-05-13 12:00:00">2021-05-13</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:06:30.000Z" title="更新于 2025-12-31 13:06:30">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Redis/">Redis</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 缓存更新
+定时更新，定时将底层数据库内的数据更新到缓存中，该方法比较简单，适合需要缓存的数据，不是很大的应用场景
+过期更新：定时将缓存中过期的数据更新为最新数据并更新缓存的过期时间
+写请求更新：在用户有写请求时先写数据库同时更新缓存，这使用于用户对缓存数据和数据库的数据有实时强制性要求的情况
+读请求更新：在用户有读请求的时候，先判断该请求的数据是否存在或者过期，如果不存在或已过期，则进行底层数据库查询并将查询的时候更新到缓存中，将结果返回给用户
+
+缓存穿透缓存穿透是一些无效的请求，请求到redis，mysql中都没有的数据，这些无效的请求非常多的话，还会占用系统IO，影响整个系统 解决办法：
+
+缓存空值：你要判断A在不在数据库里面,最简单的就是把A存到缓存,但是这样存,数据太大了；缓存无效的数据，会被刷爆
+布隆过滤器：用布隆过滤器映射A,下次查询只要先经过布隆过滤器是否存在,就可以了.(布隆过滤器用的是bit数 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/docker_common_start/" title="Docker搭建组建手册">Docker搭建组建手册</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-09T04:00:00.000Z" title="发表于 2021-05-09 12:00:00">2021-05-09</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:04:23.000Z" title="更新于 2025-12-31 13:04:23">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/docker/">docker</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/docker/">docker</a></span></div><div class="content">
+😀 
+
+
+这里写文章的前言：记录使用docker搭建的各种组建和手册
+
+📝 RocketMQ4.9.1版本拉取镜像 &amp; 运行namesrvsudo docker pull apache/rocketmq:4.9.3sudo docker network create rocketmq
+
+sudo docker run -d --name rocketmq-namesrv --network rocketmq -p 9876:9876 -v /home/luohong/coding/dockers/rocketmq/namesrv/logs:/root/logs -v /home/luohong/coding/dockers/rocketmq/namesrv/store:/root/store apache/rocketmq:4.9.1 sh mqnamesrv
+
+> 查看 rocketmq-namesrv 状态
+
+
+
+docker cp 容器ID:容器内文件位置 本地位置
+4b6a5f523bfe : 是自己本地允许的 rocketmq-namesrv的 containe ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/article/docker_common1/" title="Docker知识"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/docker_common1/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker知识"></a></div><div class="recent-post-info"><a class="article-title" href="/article/docker_common1/" title="Docker知识">Docker知识</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-07T04:00:00.000Z" title="发表于 2021-05-07 12:00:00">2021-05-07</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-05T07:56:14.000Z" title="更新于 2023-06-05 15:56:14">2023-06-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/docker/">docker</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/docker/">docker</a></span></div><div class="content">
+😀 这里写文章的前言：容器化时代,docker是一门必备的知识安装手册: https://www.runoob.com/docker/docker-architecture.html
+
+📝 docker原理NameSpaceNameSpace是Linux内核的一项功能,该功能对内核资源进行隔离，使得容器的进程都可以在单独的命名空间中运行，并且只可以访问当前容器命名空间的资源
+NameSpace可以隔离进程ID，主机名，用户ID，文件名，网络访问和进程通信等相关资源
+
+pid namespace: 用于隔离进程ID
+net namespace: 隔离网络接口，在虚拟的net namespace内用户可以拥有自己独立的ip，路由，端口等
+mnt namespace: 文件系统挂载点隔离
+ipc namespace: 信号量，消息队列和共享内存的隔离
+uts namespace: 主机命和域名的隔离
+
+CGroupsCgroups 是一种linux内核功能，可以限制和隔离进程的资源使用情况(CPU,内存,磁盘I&#x2F;O,网络等).在容器的实现中,Cgroups通常用来限制容器的c ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/article/redis_basic/" title="Redis基础"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/redis_basic/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis基础"></a></div><div class="recent-post-info"><a class="article-title" href="/article/redis_basic/" title="Redis基础">Redis基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-06T04:00:00.000Z" title="发表于 2021-05-06 12:00:00">2021-05-06</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:06:33.000Z" title="更新于 2025-12-31 13:06:33">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/">使用入门</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Redis/">Redis</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+
+📝 redis结构高性能主线： 线程模型，数据结构，持久化 网络框架：高可靠主线，包括主从复制，哨兵机制 高可扩展主线：数据分片，负载均衡
+Redis是一种运行速度很快，并发很强的跑在内存上的NOSQL数据库
+
+基于内存运行，CPU不是瓶颈，所以不用多线程，单线程实现简单，瓶颈在于内存
+支持8种数据结构
+支持分布式，理论上可以无线扩充，cluster集群模式
+key-value存储模式
+可持久化文件
+最多每秒可以处理10w+请求
+
+
+
+redis为什么快
+完全基于内存，绝大部分请求是纯粹的内存操作，非常快速。数据存在内存中，类似HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)
+数据结构使用高效，Redis中的数据结构专门进行设计，并且操作的时间复杂度较低
+采用单线程，避免了不必要的上下文切换和竞态条件，也不存在多进程或多线程导致的切换而消耗CPU，不用去考虑各种锁的问题，不存在加锁释放锁 ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/article/mybatis_springBoot_source1/" title="mybatis与springboot整合阅读"><img class="post-bg" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/mybatis_springBoot_source1/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mybatis与springboot整合阅读"></a></div><div class="recent-post-info"><a class="article-title" href="/article/mybatis_springBoot_source1/" title="mybatis与springboot整合阅读">mybatis与springboot整合阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-20T04:00:00.000Z" title="发表于 2021-04-20 12:00:00">2021-04-20</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:06:45.000Z" title="更新于 2025-12-31 13:06:45">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 前提MyBatis 与 SpringBoot 整合操作. 在这次整合的过程中,再次明白自己毫无疑问的是一个比较手残的同学了.
+这里我们是基于 sql 语句写在 xml 里面进行整合的操作.
+入门这里说下创建一个 入门 项目的大致流程.
+先创建一个 SpringBoot 项目 , 引入依赖 : https://github.com/baoyang23/mybtatis-analysis/blob/master/mybatis-spring-boot-hello/pom.xml
+创建 MyBatis 的配置文件信息 : https://github.com/baoyang23/mybtatis-analysis/blob/master/mybatis-spring-boot-hello/src/main/resources/mybatis-config.xml
+创建查询的 sql 语句，也就是我们的 mapper  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/mybatis_spring_all_source1/" title="mybatis与spring整合阅读">mybatis与spring整合阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-15T04:00:00.000Z" title="发表于 2021-04-15 12:00:00">2021-04-15</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:06:58.000Z" title="更新于 2025-12-31 13:06:58">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 题记MyBatis 与 Spring 整合操作. 在我们入门学习 SSM 等东西的时候，就发现了任何东西，最后都是逃不过与Spring整合起来的道路. 然后这里看完 MyBatis 整合完 Spring 之后，那么之后一些其他的第三方，比如axon&#x2F;redis&#x2F;apollo&#x2F;shiro 等这些东西，如果要整合 Spring 的时候，是不是也是相似的整合方式呢？
+这个需要我们看完 MyBatis 与 Spring 之后，探究其整合的操作.
+入门分几个步骤，操作一把即可,带你回到哪个 SM 时代，不过这回是没有了 tomcat 的.
+先放上一个完成的整合地址 : https://github.com/baoyang23/mybtatis-analysis/tree/master/mybatis-spring-hello 如果不要看下面流程的,一步跳过即可.
+
+先创建一个 maven 项 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/5/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/#content-inner">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/7/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/categories/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a>
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">16</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Kafka/"><span class="card-category-list-name">Kafka</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/ORM%E6%A1%86%E6%9E%B6/"><span class="card-category-list-name">ORM框架</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Spark/"><span class="card-category-list-name">Spark</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Spring/"><span class="card-category-list-name">Spring</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/SpringBoot/"><span class="card-category-list-name">SpringBoot</span><span class="card-category-list-count">5</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/SonarQube/" style="font-size: 1.1em; color: #999">SonarQube</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 1.14em; color: #999b9d">插件</a> <a href="/tags/java%E9%9B%86%E5%90%88/" style="font-size: 1.14em; color: #999b9d">java集合</a> <a href="/tags/Redis/" style="font-size: 1.32em; color: #99a2ae">Redis</a> <a href="/tags/hadoop/" style="font-size: 1.14em; color: #999b9d">hadoop</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/" style="font-size: 1.14em; color: #999b9d">数据湖</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" style="font-size: 1.14em; color: #999b9d">数据中台</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 1.37em; color: #99a4b2">框架</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/docker/" style="font-size: 1.14em; color: #999b9d">docker</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">开发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91/" style="font-size: 1.23em; color: #999ea6">数据开发</a> <a href="/tags/%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" style="font-size: 1.19em; color: #999da1">问题记录</a> <a href="/tags/Linux/" style="font-size: 1.1em; color: #999">Linux</a> <a href="/tags/springBoot/" style="font-size: 1.1em; color: #999">springBoot</a> <a href="/tags/java/" style="font-size: 1.37em; color: #99a4b2">java</a> <a href="/tags/%E7%94%9F%E6%B4%BB%E7%A2%8E%E7%A2%8E%E5%BF%B5/" style="font-size: 1.14em; color: #999b9d">生活碎碎念</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.28em; color: #99a0aa">并发编程</a> <a href="/tags/%E8%A7%84%E8%8C%83/" style="font-size: 1.1em; color: #999">规范</a> <a href="/tags/%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/" style="font-size: 1.37em; color: #99a4b2">使用入门</a> <a href="/tags/kafka/" style="font-size: 1.19em; color: #999da1">kafka</a> <a href="/tags/spring/" style="font-size: 1.28em; color: #99a0aa">spring</a> <a href="/tags/mysql/" style="font-size: 1.23em; color: #999ea6">mysql</a> <a href="/tags/SpringCloud/" style="font-size: 1.1em; color: #999">SpringCloud</a> <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 1.1em; color: #999">神经网络</a> <a href="/tags/Antlr/" style="font-size: 1.1em; color: #999">Antlr</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.32em; color: #99a2ae">大数据</a> <a href="/tags/JVM/" style="font-size: 1.41em; color: #99a5b7">JVM</a> <a href="/tags/hdfs/" style="font-size: 1.1em; color: #999">hdfs</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 1.1em; color: #999">机器学习</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 1.5em; color: #99a9bf">源码分析</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 1.19em; color: #999da1">思考</a> <a href="/tags/Iceberg/" style="font-size: 1.19em; color: #999da1">Iceberg</a> <a href="/tags/RocketMQ/" style="font-size: 1.1em; color: #999">RocketMQ</a> <a href="/tags/hive/" style="font-size: 1.14em; color: #999b9d">hive</a> <a href="/tags/Spring/" style="font-size: 1.19em; color: #999da1">Spring</a> <a href="/tags/Java/" style="font-size: 1.46em; color: #99a7bb">Java</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.19em; color: #999da1">工具</a> <a href="/tags/SpringBoot/" style="font-size: 1.28em; color: #99a0aa">SpringBoot</a> <a href="/tags/Spark/" style="font-size: 1.23em; color: #999ea6">Spark</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">十二月 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/07/"><span class="card-archive-list-date">七月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/06/"><span class="card-archive-list-date">六月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/05/"><span class="card-archive-list-date">五月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/12/"><span class="card-archive-list-date">十二月 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">八月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/07/"><span class="card-archive-list-date">七月 2022</span><span class="card-archive-list-count">3</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">87</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2020-06-30T00:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">213.7k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-08-12T04:38:15.520Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

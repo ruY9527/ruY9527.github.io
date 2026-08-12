@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringBoot初始化阅读 | YangBao</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SpringBoot扩展方法源码阅读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot初始化阅读">
+<meta property="og:url" content="https://ruy9527.github.io/article/SpringBoot_Initalize_source/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="SpringBoot扩展方法源码阅读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/ruY9527">
+<meta property="article:published_time" content="2021-02-23T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-31T05:07:26.000Z">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="源码分析">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/ruY9527"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/article/SpringBoot_Initalize_source/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringBoot初始化阅读',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-12-31 13:07:26'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringBoot初始化阅读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-02-23T04:00:00.000Z" title="发表于 2021-02-23 12:00:00">2021-02-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:26.000Z" title="更新于 2025-12-31 13:07:26">2025-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringBoot/">SpringBoot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringBoot初始化阅读"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>😀 这里写文章的前言：<br>一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。</p>
+</blockquote>
+<blockquote>
+<p>可以说说你的故事：阻碍、努力、结果成果，意外与转折。</p>
+</blockquote>
+<h1 id="📝-SpringBoot-中-Initializer"><a href="#📝-SpringBoot-中-Initializer" class="headerlink" title="📝 SpringBoot 中 Initializer"></a>📝 <strong>SpringBoot 中 Initializer</strong></h1><p>最近看 SpringBoot 源码,看源码这个这个东西是真的要细心, 当你看到觉得重要的东西的时候,就一定要仔细去看,代码的走向以及走到了那个类中. 只有掌握这些,接下来才会更好理解.</p>
+<p> 然后我今天在看的时候, org.springframework.boot.SpringApplication#prepareContext —&gt; org.springframework.boot.SpringApplication#applyInitializers 当debug到这里的时候,就会看到 getInitializers() 方法返回的是一个集合,其中都是以Initializers 结尾的,并且都调用了相应的 initialize 方法. 所以就看下这个地方是要做写什么操作.</p>
+<p>DelegatingApplicationContextInitializer</p>
+<p>SharedMetadataReaderFactoryContextInitializer</p>
+<p>ContextIdApplicationContextInitializer</p>
+<p>ConfigurationWarningsApplicationContextInitializer</p>
+<p>RSocketPortInfoApplicationContextInitializer</p>
+<p>ServerPortInfoApplicationContextInitializer</p>
+<p>ConditionEvaluationReportLoggingListener</p>
+<p>如果我们没有进行扩展的话,这里就是默认的七个.</p>
+<p>其中有五个是在 SpringBoot源码下的 META-INF&#x2F;spring.factories 下的</p>
+<p>org.springframework.context.ApplicationListener.</p>
+<p>还有二个应该是在之前给添加进来的. 执行顺序是按照上面: 一次从下执行.</p>
+<h2 id="DelegatingApplicationContextInitializer"><a href="#DelegatingApplicationContextInitializer" class="headerlink" title="DelegatingApplicationContextInitializer"></a>DelegatingApplicationContextInitializer</h2><p>该方法就是获取 environment 中的 context.initializer.classes 指定的class信息</p>
+<p>class信息也是要实现ApplicationContextInitializer接口的,然后实现完了,就会调用 initializer 方法.</p>
+<p>也就是说该类,就是实例化配置 context.initializer.classes 中的子类,并且调用其 initializer 方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext context)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取 Environment</span></span><br><span class="line">		<span class="type">ConfigurableEnvironment</span> <span class="variable">environment</span> <span class="operator">=</span> context.getEnvironment();</span><br><span class="line">        <span class="comment">// context.initializer.classes,从evn中获取 classNames集合信息.</span></span><br><span class="line">        <span class="comment">// 获取出来的classNames是有值的话,就会迭代,</span></span><br><span class="line">        <span class="comment">//挨个调用Class.forName这个方法获取Class信息,最后返回集合回来</span></span><br><span class="line">		List&lt;Class&lt;?&gt;&gt; initializerClasses = getInitializerClasses(environment);</span><br><span class="line">		<span class="keyword">if</span> (!initializerClasses.isEmpty()) &#123;</span><br><span class="line">         <span class="comment">// 获取出来的classNames不是empty的话,就会走这里.</span></span><br><span class="line">         <span class="comment">// 最后调用BeanUtils.instantiateClass(initializerClass)实例化</span></span><br><span class="line">         <span class="comment">//这里实例化的对象,是要实现ApplicationContextInitializer接口的</span></span><br><span class="line">  <span class="comment">//最后可以看到这个方法,DelegatingApplicationContextInitializer#applyInitializers   </span></span><br><span class="line">      <span class="comment">// 可以看到该方法也是先排序,然后调用initialize方法.      </span></span><br><span class="line">			applyInitializerClasses(context, initializerClasses);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SharedMetadataReaderFactoryContextInitializer"><a href="#SharedMetadataReaderFactoryContextInitializer" class="headerlink" title="SharedMetadataReaderFactoryContextInitializer"></a><strong>SharedMetadataReaderFactoryContextInitializer</strong></h2><p>添加一个 CachingMetadataReaderFactoryPostProcessor 到 ApplicationContext 中去.</p>
+<p>添加进去的 PostProcessor是其内部类,并且是私有的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line"> <span class="comment">// 添加一个 CachingMetadataReaderFactoryPostProcessor 到 applicationContext中去       </span></span><br><span class="line">		applicationContext.addBeanFactoryPostProcessor(<span class="keyword">new</span> <span class="title class_">CachingMetadataReaderFactoryPostProcessor</span>());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ContextIdApplicationContextInitializer"><a href="#ContextIdApplicationContextInitializer" class="headerlink" title="ContextIdApplicationContextInitializer"></a><strong>ContextIdApplicationContextInitializer</strong></h2><p>可以看到该 Initializer 就是对 <a target="_blank" rel="noopener" href="http://spring.application.name/">spring.application.name</a> 进行获取,获取不到的话,就使用application默认值给设置到context中, 同时将 ContextId 也给注册到 beanFactory中去.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line">        <span class="comment">// ContextId 中的 id 字段的值,就是spring.application.name 这个字段对应的值</span></span><br><span class="line">        <span class="comment">// 如果没有的话,那么就是对用的值就是application</span></span><br><span class="line">		<span class="type">ContextId</span> <span class="variable">contextId</span> <span class="operator">=</span> getContextId(applicationContext);</span><br><span class="line">        <span class="comment">// 将id给设置到 applicationContext中去</span></span><br><span class="line">		applicationContext.setId(contextId.getId());</span><br><span class="line">        <span class="comment">// 将contextId 注册到 beanFactory 中去.</span></span><br><span class="line">		applicationContext.getBeanFactory().registerSingleton(ContextId.class.getName(), contextId);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ConfigurationWarningsApplicationContextInitializer"><a href="#ConfigurationWarningsApplicationContextInitializer" class="headerlink" title="ConfigurationWarningsApplicationContextInitializer"></a><strong>ConfigurationWarningsApplicationContextInitializer</strong></h2><p>该Initializer 也是添加一个 PostProcessor 到 context中去.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext context)</span> &#123;</span><br><span class="line">  <span class="comment">// getCheck返回的一个ChWebServerInitializedEventeck数组,其只有一个ComponentScanPackageCheck类.</span></span><br><span class="line">  <span class="comment">// 然后在new一个PostProcessor给添加到 context 中去      </span></span><br><span class="line">		context.addBeanFactoryPostProcessor(<span class="keyword">new</span> <span class="title class_">ConfigurationWarningsPostProcessor</span>(getChecks()));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="RSocketPortInfoApplicationContextInitializer"><a href="#RSocketPortInfoApplicationContextInitializer" class="headerlink" title="RSocketPortInfoApplicationContextInitializer"></a><strong>RSocketPortInfoApplicationContextInitializer</strong></h2><p>该方法主要是添加一个 Listener 到ApplicationContext 中去,其监听的event是 RSocketServerInitializedEvent</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line">        <span class="comment">// new Listener中Listener是其内部类:</span></span><br><span class="line">        <span class="comment">// 可以看到 Listener 是有继承 ApplicationListener,</span></span><br><span class="line">        <span class="comment">// 并且监听的是 RSocketServerInitializedEvent 这个Event</span></span><br><span class="line">        <span class="comment">// 然后就将 listener给添加到 applicationContext 中去</span></span><br><span class="line">		applicationContext.addApplicationListener(<span class="keyword">new</span> <span class="title class_">Listener</span>(applicationContext));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ServerPortInfoApplicationContextInitializer"><a href="#ServerPortInfoApplicationContextInitializer" class="headerlink" title="ServerPortInfoApplicationContextInitializer"></a><strong>ServerPortInfoApplicationContextInitializer</strong></h2><p>该类不仅仅是一个 Initializer,而且还是一个 Listener监听器. 主要是用来监听 WebServerInitializedEvent 的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 该类实现了ApplicationContextInitializer和ApplicationListener二个接口	</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerPortInfoApplicationContextInitializer</span> <span class="keyword">implements</span></span><br><span class="line">		<span class="title class_">ApplicationContextInitializer</span>&lt;ConfigurableApplicationContext&gt;, ApplicationListener&lt;WebServerInitializedEvent&gt; &#123;</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line">  <span class="comment">// 自己是监听器,监听WebServerInitializedEvent的event. 于是就将自己给添加到applicationContext中去.      </span></span><br><span class="line">		applicationContext.addApplicationListener(<span class="built_in">this</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ConditionEvaluationReportLoggingListener"><a href="#ConditionEvaluationReportLoggingListener" class="headerlink" title="ConditionEvaluationReportLoggingListener"></a><strong>ConditionEvaluationReportLoggingListener</strong></h2><p>该 LoggingListener 虽然也是一个 Initializer, 但是其名字是没有包含任何Initializer的意思,反倒是作为监听器的,而且接受Event并不是其自身,而是内部类来接受,然后调用自己方法来处理Event来.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line">        <span class="comment">// 赋值给该类定义的变量 applicationContext</span></span><br><span class="line">		<span class="built_in">this</span>.applicationContext = applicationContext;</span><br><span class="line">   <span class="comment">// 然后new一个ConditionEvaluationReportListener的监听器,添加到applicationContext中去.</span></span><br><span class="line"> <span class="comment">// 而且看到这个该类的匿名类监听器:该监听器是监听所有的event. </span></span><br><span class="line"> <span class="comment">//实测是ConditionEvaluationReportListener在获取event,真实是 ConditionEvaluationReportLoggingListener 在处理event.      </span></span><br><span class="line">		applicationContext.addApplicationListener(<span class="keyword">new</span> <span class="title class_">ConditionEvaluationReportListener</span>());</span><br><span class="line"> <span class="comment">// 如果 application是 GenericApplicationContext或其子类的话,就会先从application中获取出beanFactory来</span></span><br><span class="line"> <span class="comment">//ConditionEvaluationReport.get():判断传入进来的beanFactory中是否包含:autoConfigurationReport  //如果是包含的话,就从其中获取. 如果不包含的话,就自己new一个,然后给注册到beanFactory中去.</span></span><br><span class="line"><span class="comment">// locateParent(): 从beanFactory中获取parentBeanFactory来,如果parentBeanFactory不是null并且包含  autoConfigurationReport 的话,就赋给 report.parent       </span></span><br><span class="line">		<span class="keyword">if</span> (applicationContext <span class="keyword">instanceof</span> GenericApplicationContext) &#123;</span><br><span class="line">			<span class="comment">// Get the report early in case the context fails to load</span></span><br><span class="line">			<span class="built_in">this</span>.report = ConditionEvaluationReport.get(<span class="built_in">this</span>.applicationContext.getBeanFactory());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">-------------------  </span><br><span class="line"> <span class="comment">// 匿名内部监听器: 直接调用类ConditionEvaluationReportLoggingListener的方法   </span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onApplicationEvent</span><span class="params">(ApplicationEvent event)</span> &#123;</span><br><span class="line">			ConditionEvaluationReportLoggingListener.<span class="built_in">this</span>.onApplicationEvent(event);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="小战一把-自定义"><a href="#小战一把-自定义" class="headerlink" title="小战一把(自定义)"></a><strong>小战一把(自定义)</strong></h1><p>我们先自己写一个类实现 ApplicationContextInitializer 这个接口. 当然,这个initialize 中可以做的事件还是有点多的,我这里就选择注册一个bean 到 Spring的 BeanFactory 中去吧.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GavinYangSelfInializer</span> <span class="keyword">implements</span> <span class="title class_">ApplicationContextInitializer</span>&lt;ConfigurableApplicationContext&gt;, Ordered &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册监听器</span></span><br><span class="line"><span class="comment">     * 注册bean到BeanFactory中去.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> applicationContext</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(ConfigurableApplicationContext applicationContext)</span> &#123;</span><br><span class="line">        applicationContext.getBeanFactory().registerSingleton(<span class="string">&quot;gavinYangInit&quot;</span>,<span class="keyword">new</span> <span class="title class_">InitServiceImpl</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getOrder</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写一个实体类: 可以看到这个类是没什么其他的操作,就是一个方法.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InitServiceImpl</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">say</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;GavinYang万年帅&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后我们在启动完成了之后,从 applicationContext 中获取出这个bean来,并且调用这个方法.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">ConfigurableApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> application.run(args);</span><br><span class="line">        <span class="type">InitServiceImpl</span> <span class="variable">contextBean</span> <span class="operator">=</span>(InitServiceImpl) context.getBean(<span class="string">&quot;gavinYangInit&quot;</span>);</span><br><span class="line">        contextBean.say();</span><br></pre></td></tr></table></figure>
+
+<p>最后就可以在控制台看到打印的: GavinYang万年帅</p>
+<p>没错,我就是万年帅.</p>
+<p>到这里, 自己定义一个就完成了.</p>
+<p>除了这种定义方式外,还可以看到 DelegatingApplicationContextInitializer 做的事情,也就是获取配置中context.initializer.classes的信息,然后实例化,在调用 initialize 方法.</p>
+<h1 id="🤗-总结归纳"><a href="#🤗-总结归纳" class="headerlink" title="🤗 总结归纳"></a>🤗 总结归纳</h1><p>可以看到, SpringBoot 中 在初始化 initialize这步的时候, 很多都是添加 postProcessor 和 listener 到 Spring 中去. 然后我们接着自己定义 initialize , 也就是添加一个对象到 beanFactory 中去. 最后获取出这个bean,然后调用其方法都是ok的.</p>
+<h1 id="📎-参考文章"><a href="#📎-参考文章" class="headerlink" title="📎 参考文章"></a>📎 参考文章</h1><blockquote>
+<p>💡 有关文章的问题，欢迎您在底部评论区留言，一起交流~</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io">ruY9527</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://ruy9527.github.io/article/SpringBoot_Initalize_source/">https://ruy9527.github.io/article/SpringBoot_Initalize_source/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ruy9527.github.io" target="_blank">YangBao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/article/SpringBoot_init_source/" title="SpringBoot构造方法阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringBoot构造方法阅读</div></div></a></div><div class="next-post pull-right"><a href="/article/Spring_extend_read/" title="Spring扩展"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spring扩展</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/article/SpringBoot_bean_postprocess/" title="SpringBoot中BeanPostProcessor"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-26</div><div class="title">SpringBoot中BeanPostProcessor</div></div></a></div><div><a href="/article/SpringBoot_init_source/" title="SpringBoot构造方法阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-02</div><div class="title">SpringBoot构造方法阅读</div></div></a></div><div><a href="/article/SpringBoot_run_source/" title="SpringBoot的run方法阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-12</div><div class="title">SpringBoot的run方法阅读</div></div></a></div><div><a href="/article/SpringBoot_web_create/" title="SpringBoot创建Web环境"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-29</div><div class="title">SpringBoot创建Web环境</div></div></a></div><div><a href="/article/Spring_extend_read/" title="Spring扩展"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-02</div><div class="title">Spring扩展</div></div></a></div><div><a href="/article/Spring_getBean_source/" title="Spring的getBean方法阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-10</div><div class="title">Spring的getBean方法阅读</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%9D-SpringBoot-%E4%B8%AD-Initializer"><span class="toc-number">1.</span> <span class="toc-text">📝 SpringBoot 中 Initializer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DelegatingApplicationContextInitializer"><span class="toc-number">1.1.</span> <span class="toc-text">DelegatingApplicationContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SharedMetadataReaderFactoryContextInitializer"><span class="toc-number">1.2.</span> <span class="toc-text">SharedMetadataReaderFactoryContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ContextIdApplicationContextInitializer"><span class="toc-number">1.3.</span> <span class="toc-text">ContextIdApplicationContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConfigurationWarningsApplicationContextInitializer"><span class="toc-number">1.4.</span> <span class="toc-text">ConfigurationWarningsApplicationContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSocketPortInfoApplicationContextInitializer"><span class="toc-number">1.5.</span> <span class="toc-text">RSocketPortInfoApplicationContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServerPortInfoApplicationContextInitializer"><span class="toc-number">1.6.</span> <span class="toc-text">ServerPortInfoApplicationContextInitializer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConditionEvaluationReportLoggingListener"><span class="toc-number">1.7.</span> <span class="toc-text">ConditionEvaluationReportLoggingListener</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E6%88%98%E4%B8%80%E6%8A%8A-%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text">小战一把(自定义)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%A4%97-%E6%80%BB%E7%BB%93%E5%BD%92%E7%BA%B3"><span class="toc-number">3.</span> <span class="toc-text">🤗 总结归纳</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%93%8E-%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">4.</span> <span class="toc-text">📎 参考文章</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

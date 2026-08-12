@@ -1,0 +1,361 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>YangBao - 知识笔记</title><meta name="author" content="ruY9527"><meta name="copyright" content="ruY9527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java &#x2F; 大数据 &#x2F; 中间件 技术笔记">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YangBao">
+<meta property="og:url" content="https://ruy9527.github.io/page/7/index.html">
+<meta property="og:site_name" content="YangBao">
+<meta property="og:description" content="Java &#x2F; 大数据 &#x2F; 中间件 技术笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/ruY9527">
+<meta property="article:author" content="ruY9527">
+<meta property="article:tag" content="Java,Spring,MyBatis,JVM,大数据,Spark,Kafka,Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/ruY9527"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruy9527.github.io/page/7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'YangBao',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-08-12 12:38:16'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="YangBao" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="YangBao"><span class="site-name">YangBao</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-box-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">YangBao</h1><div id="site_social_icons"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/mybatis_localtion_cache1/" title="mybatis本地缓存阅读">mybatis本地缓存阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-12T04:00:00.000Z" title="发表于 2021-04-12 12:00:00">2021-04-12</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:01.000Z" title="更新于 2025-12-31 13:07:01">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 题记缓存这个知识点在许多地方都有的，利用到好的话，对系统的很多地方查询是有很大的提升的. 可以看到,MyBatis 也是有 cache 的，那MyBatis 是怎么利用这个缓存的呢？ 在 INSERT&#x2F;UPDATE&#x2F;DELETE&#x2F;SELECT中,是不是只有SELECT的时候用到了缓存，如果是 INSERT&#x2F;UPDATE&#x2F;DELETE 是否会对缓存有影响？可以看结果来分析，然后跟进源码来仔细分析.
+MyBatis 是分为 一级缓存 和 二级缓存的. 那么，我们就先从一级缓存开始.
+一级缓存案例代码 :
+这里我们是打印的查询sql的语句，再第二次再查询的时候，是
+InputStream mybatisInputStream = Resources.getResourceAsStream(&quot;mybatis-config.xml&quot;);SqlSessi ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/mybatis_mapper_source1/" title="mybatis中mapper文件阅读">mybatis中mapper文件阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-09T04:00:00.000Z" title="发表于 2021-04-09 12:00:00">2021-04-09</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:05.000Z" title="更新于 2025-12-31 13:07:05">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 题记MyBatis是如何对 Mapper 文件中的sql进行处理呢？ 虽然上篇解析 mybatis-config.xml 是有进行说明的, 但是应该拿出来单独仔细解析下. 因为这个里面涉及到动态sql, 加上mapper文件自身也有很多标签内容,然后MyBatis是怎么读取出这些内容的呢？读取出来后,又是做了怎么样的处理, 然后达到了sql那种执行效果的呢？
+意思也就是,Mapper + 动态sql , 内容还是有点多的, 并且也很重要, 是非常有必要拿出来单独的仔细讲解下的.
+Target在之前对标签的进行解析的时候,是有对 标签进行一个初步的解析. 然后里面其实是很多内容还没填补很详细,所以特意记录下对 详细操作的. 那么，下文就开始操作吧.
+org.apache.ibatis.builder.xml.XMLMapperBuilder#parse主要来看这段解析的代码 :
+public void parse ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/mybatis_config_xml_source1/" title="mybatis中config-xml代码阅读">mybatis中config-xml代码阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-06T04:00:00.000Z" title="发表于 2021-04-06 12:00:00">2021-04-06</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:08.000Z" title="更新于 2025-12-31 13:07:08">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 题记对于配置文件的解析, 还是相对比较好理解的, 就是读取配置文件, 然后在代码需要的地方给使用到.
+这里,可以扩展下, Spring &#x2F; SpringBoot 等是怎么读取配置文件呢 ? 并且配置文件还是有 xml &#x2F; properties&#x2F;yaml 等格式的 ， 其读取代码是怎么写的 ? 然后基于 阿波罗(携程开源) 的配置中心 , 其实现配置又是怎么实现的呢 ? 然后这里，看了 Mybatis 读取配置文件, 后续再出 Spring 配置文件的时候，如果二者读取配置进行对比, 你个人更倾向使用代码呢 ?
+所以,这里就开启读取 Mybatis 是如何解析配置文件的操作.
+配置文件这里的配置文件解读,是根据 MyBatis官网来一步一步的解析阅读. 如果有官网没有涉及到的,发现了也会在后续加上去的. 解析多行代码, 才能理解 何为优秀.
+标签一 : propertiesorg.a ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/mybatis_work_source1/" title="MyBatis工作流程分析">MyBatis工作流程分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-02T04:00:00.000Z" title="发表于 2021-04-02 12:00:00">2021-04-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:10.000Z" title="更新于 2025-12-31 13:07:10">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ORM%E6%A1%86%E6%9E%B6/">ORM框架</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%A1%86%E6%9E%B6/">框架</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 MyBatis 的工程流程分析MyBatis 是我们在学习Java框架，也就是学习完JavaWeb的知识后,要学习到的一个ORM的框架. 我也是学习&amp;使用过后，再次对源码进行阅读的. 所以这篇文章记录 MyBatis 的一个 work flow.
+先放上项目地址 : https://github.com/baoyang23/mybtatis-analysis/tree/master/mybatis-work-flow
+有兴趣的同学,可以clone下来看看.
+代码案例先放上案列的代码, 然后我们可以挨个的分析
+public class InitHelloMyBatis &#123;    public static void main(String[] args) throws IOException &#123;        // 读取配置文件.        InputStream mybatisI ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/SpringBoot_web_create/" title="SpringBoot创建Web环境">SpringBoot创建Web环境</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-29T04:00:00.000Z" title="发表于 2021-03-29 12:00:00">2021-03-29</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:13.000Z" title="更新于 2025-12-31 13:07:13">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 SpringBoot创建Web环境启动一个SpringBoot项目就相当于启动了一个web项目, 内嵌的tomcat, 那 SpringBoot是怎么启动这个代码的呢?
+ 所以还是需要去看下其底层是怎么走的实现的.
+方法org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#onRefresh
+当走 refresh 方法的时候, 如果只是单纯的Spring的话,那么这里就不会走到上面的子类.
+如果是基于SpringBoot查看的代码,并且也引入了 web环境,那么走 refresh的之后,跟进 onRefresh 方法,就会走到这里来.
+@Override	protected void onRefresh() &#123;		super.onRefresh();		try &#123;             ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/SpringBoot_bean_postprocess/" title="SpringBoot中BeanPostProcessor">SpringBoot中BeanPostProcessor</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-26T04:00:00.000Z" title="发表于 2021-03-26 12:00:00">2021-03-26</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:16.000Z" title="更新于 2025-12-31 13:07:16">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 SpringBoot中BeanPostProcessorBeanPostProcessor 是在Spring中实例化bean的时候使用到的,也是对bean的一种扩展. 理解好 BeanPostProcessor是对理解好 bean 的初始化是很重要的. 每种BeanPostProcessor都有各自不同的用途.
+看下 BeanPostProcessor 这个接口,是只有 postProcessBeforeInitialization 和 postProcessAfterInitialization 这二种方法的,并且都是用 default来进行修饰,也就是实现这个接口的时候,可以实现其方法,也可以不用实现其方法的,这就是接口上的方法使用 default 来进行修饰的情况.
+ApplicationContextAwareProcessor
+WebApplicationContextServletContextAw ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/SpringBoot_run_source/" title="SpringBoot的run方法阅读">SpringBoot的run方法阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-12T04:00:00.000Z" title="发表于 2021-03-12 12:00:00">2021-03-12</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:19.000Z" title="更新于 2025-12-31 13:07:19">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 SpringBoot 之 run 方法启动SpringBoot 无配置式启动,大大的减轻了以前需要配置很多xml中的bean&#x2F;aop&#x2F;事物等. 只需要使用@SpringBootApplication 和 SpringApplication.run() 方法就可以轻松的跑起来了. 想要看怎么这么神奇,就需要看其run() 方法的执行操作.
+ run() 方法又包含了之前分析的 refresh 方法,但是这里的refresh 方法是要比之前的 单独分析 Spring 的 refresh方法的内容要多得多.
+run方法整体我们先看下 run 方法整体的流程. 其实也不难看出来, 也是new对象,调用方法. 但是人家可不仅仅是这二种就轻松搞定了的. 而且里面采用了大量的设计模式等知识.
+从run 方法整体来看, 先是启动 StopWatch,然后获取出SpringApplicationRunList ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/SpringBoot_init_source/" title="SpringBoot构造方法阅读">SpringBoot构造方法阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-02T04:00:00.000Z" title="发表于 2021-03-02 12:00:00">2021-03-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:21.000Z" title="更新于 2025-12-31 13:07:21">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 SpringBoot构造函数 SpringBoot可以说说目前Java人员都在使用的框架. 但是如果是仅仅停留在使用程度的话,那么还是比较可惜的.可以适当的阅读一下其底层代码是怎么实现的. 就其单Spring框架自身,阅读起来或者说是对其执行代码起来,还是需要大量的时间去理解的. 但是这不妨碍我们可以多阅读几遍,对其加强理解.
+构造方法这是简单的启动一个 SpringBoot 项目. 这里先不看run方法,我们就先看这个 new SpringApplication 里面是怎么走的.
+public static void main(String[] args) &#123;        SpringApplication application = new SpringApplication(BootSourceLearnApplication.class);        ConfigurableApplic ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/SpringBoot_Initalize_source/" title="SpringBoot初始化阅读">SpringBoot初始化阅读</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-02-23T04:00:00.000Z" title="发表于 2021-02-23 12:00:00">2021-02-23</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:26.000Z" title="更新于 2025-12-31 13:07:26">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 SpringBoot 中 Initializer最近看 SpringBoot 源码,看源码这个这个东西是真的要细心, 当你看到觉得重要的东西的时候,就一定要仔细去看,代码的走向以及走到了那个类中. 只有掌握这些,接下来才会更好理解.
+ 然后我今天在看的时候, org.springframework.boot.SpringApplication#prepareContext —&gt; org.springframework.boot.SpringApplication#applyInitializers 当debug到这里的时候,就会看到 getInitializers() 方法返回的是一个集合,其中都是以Initializers 结尾的,并且都调用了相应的 initialize 方法. 所以就看下这个地方是要做写什么操作.
+DelegatingApplicationContextInitializer
+Sha ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/article/Spring_extend_read/" title="Spring扩展">Spring扩展</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-02-02T04:00:00.000Z" title="发表于 2021-02-02 12:00:00">2021-02-02</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-31T05:07:30.000Z" title="更新于 2025-12-31 13:07:30">2025-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Spring/">Spring</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Spring/">Spring</a></span></div><div class="content">
+😀 这里写文章的前言：一个简单的开头,简述这篇文章讨论的问题、目标、人物、背景是什么？并简述你给出的答案。
+
+
+可以说说你的故事：阻碍、努力、结果成果，意外与转折。
+
+📝 Spring扩展前面讲到了这么多的什么BeanPostProcessor,事件什么的. 如果不写几下代码这里怕是很难弄清楚是个怎么回事. 所以只有看到代码跑,就大致可以看到其效果还是很明显的.
+BeanFactoryPostProcessor我们这里实现一下 BeanFactoryPostProcessor 来看一下效果
+我们就写一个简单的类, 然后实现下接口 BeanFactoryPostProcessor, 我们这里就获取下 beanFactory中的所有beanDefinitionNames的数组,然后给打印出来看效果. 可以看下下面打印的接口. 然后我们看下源码怎么执行的
+@Componentpublic class GavinYangBeanFactoryPostProcessor implements BeanFactoryPostProcessor &#123;    public void po ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/#content-inner">8</a><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/8/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/ruY9527" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ruY9527</div><div class="author-info__description">Java / 大数据 / 中间件</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">24</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ruY9527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ruY9527" target="_blank" title="&quot;var(--btn-color)&quot;"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博客已从 NotionNext 迁移至 GitHub Pages 🎉</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/machine_base/" title="机器学习_介绍篇章">机器学习_介绍篇章</a><time datetime="2026-08-08T04:00:00.000Z" title="发表于 2026-08-08 12:00:00">2026-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/altrl4one/" title="Antlr4-解析入门一"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/altrl4one/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Antlr4-解析入门一"/></a><div class="content"><a class="title" href="/article/altrl4one/" title="Antlr4-解析入门一">Antlr4-解析入门一</a><time datetime="2023-12-21T04:00:00.000Z" title="发表于 2023-12-21 12:00:00">2023-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/more_do_less_think/" title="生活碎碎念_多做少想">生活碎碎念_多做少想</a><time datetime="2023-12-08T04:00:00.000Z" title="发表于 2023-12-08 12:00:00">2023-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/article/post-fd4d0ada97/" title="摄影笔记"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/posts/post-fd4d0ada97/img-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="摄影笔记"/></a><div class="content"><a class="title" href="/article/post-fd4d0ada97/" title="摄影笔记">摄影笔记</a><time datetime="2023-07-18T04:00:00.000Z" title="发表于 2023-07-18 12:00:00">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/article/data_middle_tech/" title="开源数据平台_技术篇章">开源数据平台_技术篇章</a><time datetime="2023-06-14T04:00:00.000Z" title="发表于 2023-06-14 12:00:00">2023-06-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/categories/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a>
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">16</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Kafka/"><span class="card-category-list-name">Kafka</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/ORM%E6%A1%86%E6%9E%B6/"><span class="card-category-list-name">ORM框架</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Spark/"><span class="card-category-list-name">Spark</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Spring/"><span class="card-category-list-name">Spring</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/SpringBoot/"><span class="card-category-list-name">SpringBoot</span><span class="card-category-list-count">5</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/SonarQube/" style="font-size: 1.1em; color: #999">SonarQube</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 1.14em; color: #999b9d">插件</a> <a href="/tags/java%E9%9B%86%E5%90%88/" style="font-size: 1.14em; color: #999b9d">java集合</a> <a href="/tags/Redis/" style="font-size: 1.32em; color: #99a2ae">Redis</a> <a href="/tags/hadoop/" style="font-size: 1.14em; color: #999b9d">hadoop</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/" style="font-size: 1.14em; color: #999b9d">数据湖</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" style="font-size: 1.14em; color: #999b9d">数据中台</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 1.37em; color: #99a4b2">框架</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/docker/" style="font-size: 1.14em; color: #999b9d">docker</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">开发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91/" style="font-size: 1.23em; color: #999ea6">数据开发</a> <a href="/tags/%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" style="font-size: 1.19em; color: #999da1">问题记录</a> <a href="/tags/Linux/" style="font-size: 1.1em; color: #999">Linux</a> <a href="/tags/springBoot/" style="font-size: 1.1em; color: #999">springBoot</a> <a href="/tags/java/" style="font-size: 1.37em; color: #99a4b2">java</a> <a href="/tags/%E7%94%9F%E6%B4%BB%E7%A2%8E%E7%A2%8E%E5%BF%B5/" style="font-size: 1.14em; color: #999b9d">生活碎碎念</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.28em; color: #99a0aa">并发编程</a> <a href="/tags/%E8%A7%84%E8%8C%83/" style="font-size: 1.1em; color: #999">规范</a> <a href="/tags/%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/" style="font-size: 1.37em; color: #99a4b2">使用入门</a> <a href="/tags/kafka/" style="font-size: 1.19em; color: #999da1">kafka</a> <a href="/tags/spring/" style="font-size: 1.28em; color: #99a0aa">spring</a> <a href="/tags/mysql/" style="font-size: 1.23em; color: #999ea6">mysql</a> <a href="/tags/SpringCloud/" style="font-size: 1.1em; color: #999">SpringCloud</a> <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 1.1em; color: #999">神经网络</a> <a href="/tags/Antlr/" style="font-size: 1.1em; color: #999">Antlr</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.32em; color: #99a2ae">大数据</a> <a href="/tags/JVM/" style="font-size: 1.41em; color: #99a5b7">JVM</a> <a href="/tags/hdfs/" style="font-size: 1.1em; color: #999">hdfs</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 1.1em; color: #999">机器学习</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 1.5em; color: #99a9bf">源码分析</a> <a href="/tags/%E6%80%9D%E8%80%83/" style="font-size: 1.19em; color: #999da1">思考</a> <a href="/tags/Iceberg/" style="font-size: 1.19em; color: #999da1">Iceberg</a> <a href="/tags/RocketMQ/" style="font-size: 1.1em; color: #999">RocketMQ</a> <a href="/tags/hive/" style="font-size: 1.14em; color: #999b9d">hive</a> <a href="/tags/Spring/" style="font-size: 1.19em; color: #999da1">Spring</a> <a href="/tags/Java/" style="font-size: 1.46em; color: #99a7bb">Java</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.19em; color: #999da1">工具</a> <a href="/tags/SpringBoot/" style="font-size: 1.28em; color: #99a0aa">SpringBoot</a> <a href="/tags/Spark/" style="font-size: 1.23em; color: #999ea6">Spark</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">十二月 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/07/"><span class="card-archive-list-date">七月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/06/"><span class="card-archive-list-date">六月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/05/"><span class="card-archive-list-date">五月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/12/"><span class="card-archive-list-date">十二月 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">八月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/07/"><span class="card-archive-list-date">七月 2022</span><span class="card-archive-list-count">3</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">87</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2020-06-30T00:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">213.7k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-08-12T04:38:15.520Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ruY9527</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
